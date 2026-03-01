@@ -48,6 +48,7 @@ body {
     100% { transform: translateY(-10vh) rotate(360deg); }
 }
 
+/* Header */
 header {
     background: var(--glass);
     backdrop-filter: blur(15px);
@@ -64,24 +65,26 @@ header {
 .rasim-avatar { 
     width: 50px; height: 50px; border-radius: 50%; 
     border: 2px solid var(--primary); background: white; 
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
-/* Gecə/Gündüz Düyməsi */
+/* Gecə/Gündüz Düyməsi (Dairəvi) */
 .mode-toggle-btn {
     background: var(--glass);
     backdrop-filter: blur(10px);
     border: 1px solid var(--glass-border);
-    font-size: 1.5rem;
-    padding: 8px;
+    font-size: 1.4rem;
     width: 45px; height: 45px;
     border-radius: 50%;
     cursor: pointer;
     transition: 0.3s ease;
     display: flex; align-items: center; justify-content: center;
+    color: var(--text);
 }
 
-.mode-toggle-btn:hover { transform: rotate(20deg) scale(1.1); }
+.mode-toggle-btn:hover { transform: rotate(15deg) scale(1.1); }
 
+/* Çat Sahəsi */
 #chat-container {
     flex: 1;
     padding: 20px;
@@ -92,22 +95,33 @@ header {
     scroll-behavior: smooth;
 }
 
+/* Mesaj Balonları (Tam Oval) */
 .bubble {
     max-width: 80%;
-    padding: 15px 20px;
-    border-radius: 25px;
+    padding: 15px 25px;
+    border-radius: 30px; /* Oval kənarlar */
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     background: var(--glass);
     border: 1px solid var(--glass-border);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.08);
     animation: fadeIn 0.5s ease forwards;
+    line-height: 1.6;
 }
 
 @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-.user { align-self: flex-end; background: var(--secondary); color: white; border-bottom-right-radius: 5px; }
-.rasim { align-self: flex-start; border-bottom-left-radius: 5px; }
+.user { 
+    align-self: flex-end; 
+    background: var(--secondary); 
+    color: white; 
+    border-bottom-right-radius: 4px; /* Quyruq effekti */
+}
+
+.rasim { 
+    align-self: flex-start; 
+    border-bottom-left-radius: 4px; /* Quyruq effekti */
+}
 
 /* Səs Dalğası */
 .voice-wave { display: flex; align-items: center; gap: 4px; height: 20px; margin-top: 10px; }
@@ -118,8 +132,9 @@ header {
 
 /* Progress Bar */
 .progress-container { width: 100%; background: rgba(0,0,0,0.1); border-radius: 10px; height: 8px; margin: 10px 0; overflow: hidden; }
-.progress-bar { height: 100%; background: var(--primary); width: 0%; transition: 1.5s ease; }
+.progress-bar { height: 100%; background: var(--primary); width: 0%; transition: 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 
+/* Giriş Sahəsi (Oval) */
 .input-area {
     background: var(--glass);
     backdrop-filter: blur(20px);
@@ -129,15 +144,32 @@ header {
 }
 
 input {
-    flex: 1; padding: 15px 25px; border-radius: 30px;
-    border: 1px solid var(--glass-border); background: rgba(255, 255, 255, 0.1);
-    color: var(--text); outline: none; font-size: 16px;
+    flex: 1; 
+    padding: 15px 25px; 
+    border-radius: 35px; /* Tam oval */
+    border: 1px solid var(--glass-border); 
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text); 
+    outline: none; 
+    font-size: 16px;
+    transition: 0.3s;
 }
 
+input:focus { background: rgba(255, 255, 255, 0.2); border-color: var(--primary); }
+
 .btn-send { 
-    background: var(--primary); color: white; border: none;
-    padding: 12px 25px; border-radius: 30px; cursor: pointer; font-weight: bold;
+    background: var(--primary); 
+    color: white; 
+    border: none;
+    padding: 12px 28px; 
+    border-radius: 35px; /* Oval düymə */
+    cursor: pointer; 
+    font-weight: bold;
+    transition: 0.3s;
+    box-shadow: 0 4px 15px rgba(255, 71, 87, 0.3);
 }
+
+.btn-send:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255, 71, 87, 0.5); }
 
 .share-btn {
     display: inline-block; margin-top: 15px; padding: 8px 18px;
