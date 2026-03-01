@@ -4,167 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Foodis - Robot Rasim Ultra Pro</title>
-    <style>
-        :root {
-            --primary: #ff4757;
-            --secondary: #2ed573;
-            --glass: rgba(255, 255, 255, 0.2);
-            --glass-border: rgba(255, 255, 255, 0.3);
-            --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            --text: #2f3542;
-        }
-
-        body.dark-mode {
-            --bg-gradient: linear-gradient(135deg, #2f3542 0%, #1e272e 100%);
-            --glass: rgba(0, 0, 0, 0.3);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --text: #f1f2f6;
-        }
-
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            background: var(--bg-gradient);
-            background-attachment: fixed;
-            color: var(--text);
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            overflow: hidden;
-            transition: 0.5s ease;
-        }
-
-        /* Hərəkətli Fon İkonaları */
-        .bg-icons {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1;
-            pointer-events: none;
-            overflow: hidden;
-        }
-
-        .floating-icon {
-            position: absolute;
-            font-size: 2rem;
-            opacity: 0.1;
-            animation: float 10s infinite linear;
-        }
-
-        @keyframes float {
-            0% { transform: translateY(100vh) rotate(0deg); }
-            100% { transform: translateY(-10vh) rotate(360deg); }
-        }
-
-        /* Glassmorphism Header */
-        header {
-            background: var(--glass);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border-bottom: 1px solid var(--glass-border);
-            padding: 15px 25px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 10;
-        }
-
-        .header-left { display: flex; align-items: center; gap: 15px; }
-        .rasim-avatar { width: 50px; height: 50px; border-radius: 50%; border: 2px solid var(--primary); background: white; }
-
-        /* Çat Sahəsi */
-        #chat-container {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            scroll-behavior: smooth;
-        }
-
-        .bubble {
-            max-width: 80%;
-            padding: 15px 20px;
-            border-radius: 25px;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            background: var(--glass);
-            border: 1px solid var(--glass-border);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-            animation: fadeIn 0.4s ease forwards;
-        }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        .user { align-self: flex-end; background: var(--secondary); color: white; border-bottom-right-radius: 5px; }
-        .rasim { align-self: flex-start; border-bottom-left-radius: 5px; }
-
-        /* Səs Dalğası Animasiyası */
-        .voice-wave {
-            display: flex;
-            align-items: center;
-            gap: 3px;
-            height: 20px;
-            margin-top: 10px;
-        }
-        .wave-bar {
-            width: 3px;
-            height: 100%;
-            background: var(--primary);
-            animation: wave 1s infinite ease-in-out;
-        }
-        @keyframes wave { 0%, 100% { height: 5px; } 50% { height: 20px; } }
-        .wave-bar:nth-child(2) { animation-delay: 0.2s; }
-        .wave-bar:nth-child(3) { animation-delay: 0.4s; }
-
-        /* Progress Bar */
-        .progress-container { width: 100%; background: #eee; border-radius: 10px; height: 8px; margin: 10px 0; overflow: hidden; }
-        .progress-bar { height: 100%; background: var(--primary); width: 0%; transition: 1s ease; }
-
-        /* Giriş Sahəsi */
-        .input-area {
-            background: var(--glass);
-            backdrop-filter: blur(20px);
-            padding: 25px;
-            display: flex;
-            gap: 15px;
-            border-top: 1px solid var(--glass-border);
-        }
-
-        input {
-            flex: 1;
-            padding: 15px 25px;
-            border-radius: 30px;
-            border: 1px solid var(--glass-border);
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--text);
-            outline: none;
-            font-size: 16px;
-        }
-
-        .btn {
-            border: none;
-            padding: 12px 25px;
-            border-radius: 30px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: 0.3s;
-        }
-
-        .btn-send { background: var(--primary); color: white; box-shadow: 0 4px 15px rgba(255, 71, 87, 0.4); }
-        .btn-send:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255, 71, 87, 0.6); }
-
-        .share-btn {
-            display: inline-block;
-            margin-top: 15px;
-            padding: 8px 15px;
-            background: #25D366;
-            color: white;
-            border-radius: 20px;
-            text-decoration: none;
-            font-size: 14px;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body id="main-body">
 
@@ -178,18 +18,18 @@
             <small>Robot Rasim Ultra Pro</small>
         </div>
     </div>
-    <button class="btn" style="background:var(--text); color:var(--bg-gradient)" onclick="toggleDarkMode()">Gecə/Gündüz</button>
+    <button class="btn" style="background:var(--text); color:white" onclick="toggleDarkMode()">Gecə/Gündüz</button>
 </header>
 
 <div id="chat-container">
     <div class="bubble rasim">
         <span style="font-size: 12px; color: var(--primary); font-weight: bold;">🤖 ROBOT RASİM</span><br>
-        Xoş gəldin! Şüşə kimi saytda qəşəng bir yemək bişirək? Neçə nəfərsiz və soyuducuda nə var?
+        Xoş gəldin! Layihəni böyütdük, artıq CSS faylımız da var! 🚀 De görüm, bu gün nə bişiririk?
     </div>
 </div>
 
 <div class="input-area">
-    <input type="text" id="user-input" placeholder="Məs: 4 nəfərik, toyuq, bibər..." onkeypress="if(event.key==='Enter') askRasim()">
+    <input type="text" id="user-input" placeholder="Məs: 2 nəfərik, kartof, yumurta..." onkeypress="if(event.key==='Enter') askRasim()">
     <button class="btn btn-send" onclick="askRasim()">Rasimə De</button>
 </div>
 
@@ -198,7 +38,6 @@
     const bgIconsContainer = document.getElementById('bg-icons');
     const icons = ['🍎', '🥦', '🍗', '🍳', '🧂', '🥘', '🔪', '🍅'];
 
-    // Arxa fon ikonlarını yaradır
     function createBgIcons() {
         for (let i = 0; i < 15; i++) {
             const icon = document.createElement('div');
@@ -206,28 +45,22 @@
             icon.innerText = icons[Math.floor(Math.random() * icons.length)];
             icon.style.left = Math.random() * 100 + 'vw';
             icon.style.animationDelay = Math.random() * 5 + 's';
-            icon.style.animationDuration = 10 + Math.random() * 10 + 's';
             bgIconsContainer.appendChild(icon);
         }
     }
     createBgIcons();
 
-    function toggleDarkMode() {
-        document.body.classList.toggle('dark-mode');
-    }
+    function toggleDarkMode() { document.body.classList.toggle('dark-mode'); }
 
     async function askRasim() {
         const input = document.getElementById('user-input');
         const container = document.getElementById('chat-container');
         const text = input.value.trim();
-
         if (!text) return;
 
-        // İstifadəçi mesajı
         container.innerHTML += `<div class="bubble user">${text}</div>`;
         input.value = "";
         
-        // Səs dalğalı yükləmə animasiyası
         const loadingId = "loading-" + Date.now();
         container.innerHTML += `
             <div class="bubble rasim" id="${loadingId}">
@@ -243,17 +76,11 @@
         try {
             const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
                 method: "POST",
-                headers: {
-                    "Authorization": `Bearer ${GROQ_API_KEY}`,
-                    "Content-Type": "application/json"
-                },
+                headers: { "Authorization": `Bearer ${GROQ_API_KEY}`, "Content-Type": "application/json" },
                 body: JSON.stringify({
                     model: "llama-3.3-70b-versatile",
                     messages: [
-                        {
-                            role: "system",
-                            content: `Sən Foodis saytında peşəkar Azərbaycanlı aşpaz Robot Rasimsən. Səmimi, zarafatcıl ol. Porsiya sayına görə miqdarları hesabla. Cavabın sonunda 'Hazırlanma çətinliyi' üçün 1-10 arası bir rəqəm yaz (məs: Çətinlik: 7).`
-                        },
+                        { role: "system", content: "Sən Foodis aşpazı Rasimsən. Səmimi Azərbaycan dilində danış. Cavabın sonunda 'Çətinlik: X/10' formatında qeyd et." },
                         { role: "user", content: text }
                     ]
                 })
@@ -261,22 +88,17 @@
 
             const data = await response.json();
             const rasimText = data.choices[0].message.content;
-            
-            // Çətinlik dərəcəsini tapmaq (məsələn 70%)
-            const difficultyMatch = rasimText.match(/Çətinlik:\s*(\d+)/);
-            const difficultyPercent = difficultyMatch ? difficultyMatch[1] * 10 : 50;
+            const diffMatch = rasimText.match(/Çətinlik:\s*(\d+)/);
+            const diffPercent = diffMatch ? diffMatch[1] * 10 : 50;
 
-            const loadingBubble = document.getElementById(loadingId);
-            loadingBubble.innerHTML = `
+            document.getElementById(loadingId).innerHTML = `
                 <span style="font-size: 12px; color: var(--primary); font-weight: bold;">🤖 ROBOT RASİM</span><br>
                 ${rasimText.replace(/\n/g, '<br>')}
-                <div style="margin-top:15px; font-size:12px;">Hazırlanma çətinliyi:</div>
-                <div class="progress-container"><div class="progress-bar" style="width:${difficultyPercent}%"></div></div>
-                <a href="https://wa.me/?text=${encodeURIComponent('Rasim mənə möhtəşəm bir resept verdi! 🍳')}" target="_blank" class="share-btn">WhatsApp-da bölüş 📱</a>
+                <div style="margin-top:15px; font-size:11px;">HAZIRLANMA ÇƏTİNLİYİ:</div>
+                <div class="progress-container"><div class="progress-bar" style="width:${diffPercent}%"></div></div>
+                <a href="https://wa.me/?text=Rasim mənə əla resept verdi!" target="_blank" class="share-btn">WhatsApp-da Paylaş 📱</a>
             `;
-        } catch (error) {
-            document.getElementById(loadingId).innerHTML = "Rasimin mətbəxində qısaqapanma oldu! 🤯";
-        }
+        } catch (e) { document.getElementById(loadingId).innerText = "Xəta baş verdi!"; }
         container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
     }
 </script>
