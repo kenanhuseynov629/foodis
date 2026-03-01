@@ -22,7 +22,7 @@
 <div id="chat-container">
     <div class="bubble rasim">
         🤖 <b>ROBOT RASİM</b><br>
-        Mətbəxin ağası gəldi! Soyuducuda nə var? De gəlsin!
+        Mətbəxin ağası gəldi! Soyuducuda nə var? De gəlsin, sənə ən yaxşı resepti verim!
     </div>
 </div>
 
@@ -53,18 +53,7 @@
         document.getElementById('theme-btn').innerText = document.body.classList.contains('dark-mode') ? '🌙' : '☀️';
     }
 
-    // Təkmilləşdirilmiş Səs Funksiyası
-    function speak(text) {
-        window.speechSynthesis.cancel();
-        const msg = new SpeechSynthesisUtterance(text.substring(0, 250));
-        const voices = window.speechSynthesis.getVoices();
-        // Türk və ya Azərbaycan səsi axtar
-        msg.voice = voices.find(v => v.lang.includes('tr') || v.lang.includes('az')) || voices[0];
-        msg.rate = 0.9;
-        window.speechSynthesis.speak(msg);
-    }
-
-    // CANLI VİZUAL TAYMER
+    // CANLI VİZUAL TAYMER (BÖYÜK)
     function startVisualTimer(id, minutes) {
         let seconds = minutes * 60;
         const total = seconds;
@@ -72,7 +61,7 @@
         const bar = document.getElementById(`bar-${id}`);
         const btn = document.getElementById(`btn-${id}`);
         
-        btn.style.display = 'none'; // Basandan sonra düymə itsin
+        btn.style.display = 'none'; 
         
         const interval = setInterval(() => {
             seconds--;
@@ -85,9 +74,11 @@
 
             if (seconds <= 0) {
                 clearInterval(interval);
-                display.innerText = "VAXT BİTDİ! 🥘";
-                speak("Yeməyin hazırdır, nuş olsun!");
-                confetti({ particleCount: 150 });
+                display.innerText = "HAZIRDIR! 🥘";
+                display.style.fontSize = "2.5rem";
+                confetti({ particleCount: 200, spread: 100 });
+                let audio = new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg');
+                audio.play();
             }
         }, 1000);
     }
@@ -101,18 +92,20 @@
         container.innerHTML += `<div class="bubble user">${text}</div>`;
         input.value = "";
 
-        // Təkmilləşdirilmiş Spotify Pleylisti
-        if (text.toLowerCase().includes("mahnı") || text.toLowerCase().includes("musqi")) {
+        // Spotify Pleylisti
+        if (text.toLowerCase().includes("mahnı") || text.toLowerCase().includes("musiqi")) {
             container.innerHTML += `
                 <div class="bubble rasim">
                     🎵 <b>RASİM PLEYLİST</b><br>
-                    <iframe class="spotify-box" src="https://open.spotify.com/embed/playlist/37i9dQZF1DXbITWG1ZUBY9" frameborder="0" allow="encrypted-media"></iframe>
+                    Mətbəx üçün pleylist hazırlandı!<br>
+                    <iframe class="spotify-box" src="https://open.spotify.com/embed/playlist/37i9dQZF1DXbITWG1ZJKYp" allow="encrypted-media"></iframe>
                 </div>`;
+            container.scrollTo(0, container.scrollHeight);
             return;
         }
 
         const loadingId = "loading-" + Date.now();
-        container.innerHTML += `<div class="bubble rasim" id="${loadingId}">...</div>`;
+        container.innerHTML += `<div class="bubble rasim" id="${loadingId}">Rasim düşünür...</div>`;
         container.scrollTo(0, container.scrollHeight);
 
         try {
@@ -121,17 +114,12 @@
                 headers: { "Authorization": `Bearer ${GROQ_API_KEY}`, "Content-Type": "application/json" },
                 body: JSON.stringify({
                     model: "llama-3.3-70b-versatile",
-                    messages: [{ role: "system", content: "Sən Robot Rasimsən. Reseptin ilk sətrində 'YEMEK: [Ad]' yaz. Müddət verəndə 'MÜDDƏT: [Rəqəm] dəqiqə' formatını istifadə et." }, { role: "user", content: text }]
+                    messages: [{ role: "system", content: "Sən Robot Rasimsən. Səmimi Azərbaycan dilində cavab ver. Əgər bişirmə müddəti varsa, mütləq 'MÜDDƏT: [Rəqəm] dəqiqə' formatında qeyd et." }, { role: "user", content: text }]
                 })
             });
 
             const data = await response.json();
             let rasimText = data.choices[0].message.content;
-
-            // Şəkil üçün adı təmizlə
-            const dishMatch = rasimText.match(/YEMEK:\s*(.*)/);
-            const dishName = dishMatch ? dishMatch[1].split('\n')[0] : "dish";
-            const imageUrl = `https://image.pollinations.ai/prompt/professional-food-photography-${encodeURIComponent(dishName)}-on-a-plate?width=500&height=300&nologo=true`;
 
             // Taymer tap
             const timeMatch = rasimText.match(/MÜDDƏT:\s*(\d+)/);
@@ -140,22 +128,19 @@
             if (timeMatch) {
                 timerHtml = `
                     <div class="timer-container">
+                        <div style="font-weight:bold; margin-bottom:10px; color:var(--text)">Mətbəxt Taymeri</div>
                         <div class="timer-display" id="time-txt-${timerId}">${timeMatch[1]}:00</div>
                         <div class="progress-bg"><div class="progress-fill" id="bar-${timerId}"></div></div>
-                        <button class="btn-send" id="btn-${timerId}" style="margin-top:10px; width:100%" onclick="startVisualTimer('${timerId}', ${timeMatch[1]})">Taymeri Başlat</button>
+                        <button class="btn-send" id="btn-${timerId}" style="margin-top:20px; width:100%; font-size:1.1rem" onclick="startVisualTimer('${timerId}', ${timeMatch[1]})">Vaxdı Başlat</button>
                     </div>`;
             }
 
             document.getElementById(loadingId).innerHTML = `
-                🤖 <b>ROBOT RASİM</b><br>
-                <img src="${imageUrl}" class="recipe-img" onerror="this.src='https://via.placeholder.com/500x300?text=Yemək+Hazırlanır...'">
-                <button onclick="speak(\`${rasimText.replace(/`/g, '')}\`)" style="cursor:pointer; border-radius:10px; border:1px solid #ff4757; font-size:11px;">🔊 Səsli Dinlə</button><br><br>
+                🤖 <b>ROBOT RASİM</b><br><br>
                 ${rasimText.replace(/\n/g, '<br>')}
                 ${timerHtml}
             `;
-            
-            speak("Reseptiniz gəldi!");
-        } catch (e) { document.getElementById(loadingId).innerText = "Xəta oldu!"; }
+        } catch (e) { document.getElementById(loadingId).innerText = "Rasimin beyni qızdı, bir az sonra yoxla!"; }
         container.scrollTo(0, container.scrollHeight);
     }
 </script>
