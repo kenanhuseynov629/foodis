@@ -150,6 +150,13 @@ header {
     background: var(--glass); backdrop-filter: blur(20px);
     padding: 15px 25px; display: flex; gap: 10px; border-top: 1px solid var(--glass-border);
 }
-
+.rasim-logo {
+    width: 50px;           /* Loqonun eni */
+    height: 50px;          /* Loqonun hündürlüyü */
+    object-fit: contain;    /* Şəkli əzilməyə qoymur */
+    border-radius: 10px;    /* Künclərini bir az oval edir */
+    margin-right: 10px;     /* Yazı ilə loqo arasında məsafə qoyur */
+    background: #1a1a1a;    /* Sənin loqon qara fondadırsa, bura uyğun rəng verə bilərik */
+}
 input { flex: 1; padding: 12px 20px; border-radius: 30px; border: 1px solid var(--glass-border); background: rgba(255, 255, 255, 0.1); color: var(--text); }
 .btn-send { background: var(--primary); color: white; border: none; padding: 10px 25px; border-radius: 30px; cursor: pointer; font-weight: bold; }
