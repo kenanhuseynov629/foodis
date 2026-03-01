@@ -2,7 +2,7 @@
 <html lang="az">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Foodis - Robot Rasim</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
@@ -13,92 +13,150 @@
 
 <header>
     <div class="header-left" style="display: flex; align-items: center;">
-        <img src="logo.jpg" class="rasim-logo" onerror="this.src='https://api.dicebear.com/7.x/bottts/svg?seed=Rasim'" alt="Loqo">
+        <img src="logo.jpg" class="rasim-logo" onerror="this.src='https://api.dicebear.com/7.x/bottts/svg?seed=Rasim'" alt="Foodis Loqo">
         <div>
             <h3 style="margin:0">Foodis 🍳</h3>
-            <small>Rasim AI 🤖</small>
+            <small>Rasim: Smart & Responsive 🤖🧠</small>
         </div>
     </div>
 </header>
 
 <div id="chat-container">
-    <div class="bubble rasim">🤖 <b>ROBOT RASİM:</b> Salam! 👋 Saytı sənin telefonun üçün uyğunlaşdırdım. Qabarcıqlar da yerindədir! Loqo görünməsə, robot şəkli çıxacaq. 🥘</div>
+    <div class="bubble rasim">🤖 <b>ROBOT RASİM:</b> Salam! 👋 İndi həm kompüterdə loqomuz böyükdür, həm də telefonda yazı yerimiz itmir. Qabarcıqlar da arxada uçuşur! Hər şey qaydasındadır? 😊</div>
 </div>
 
 <div class="input-area">
-    <input type="text" id="user-input" placeholder="Yaz..." onkeypress="if(event.key==='Enter') askRasim()">
-    <button class="btn-send" onclick="askRasim()">De 🚀</button>
+    <input type="text" id="user-input" placeholder="Məs: Plov resepti ver... 🥘" autocomplete="off">
+    <button class="btn-send" onclick="askRasim()">Rasimə De 🚀</button>
 </div>
 
 <script>
-    // QABARCIQLAR SİSTEMİ
+    const GROQ_API_KEY = "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";
+    
+    // 🧠 YADDAŞ SİSTEMİ (Heç nəyi unutmur)
+    let chatHistory = [{ 
+        role: "system", 
+        content: "Sən Robot Rasimsən. Azərbaycan dilində səmimi cavab ver. Resept verəndə vaxtları mütləq 'X dəqiqə' formatında yaz ki, mən onları taymerə çevirə bilim. Əvvəlki mesajları həmişə nəzərə al." 
+    }];
+
+    let activeTimers = {};
+
+    // 🍎 UÇAN QABARCIQLAR SİSTEMİ
     function createBgIcons() {
         const container = document.getElementById('bg-icons');
-        const icons = ['🍎', '🥦', '🍗', '🥘', '🍅', '🍳', '🍕'];
-        for (let i = 0; i < 15; i++) {
+        const icons = ['🍎', '🥦', '🍗', '🥘', '🍅', '🍳', '🧂', '🍕', '🍟', '🧅', '🥩'];
+        for (let i = 0; i < 20; i++) {
             const el = document.createElement('div');
             el.className = 'floating-icon';
             el.innerText = icons[Math.floor(Math.random() * icons.length)];
             el.style.left = Math.random() * 100 + 'vw';
-            el.style.animationDelay = Math.random() * 5 + 's';
+            el.style.animationDelay = Math.random() * 8 + 's';
+            el.style.fontSize = (Math.random() * 15 + 20) + 'px';
             container.appendChild(el);
         }
     }
     createBgIcons();
 
-    // DİGƏR FUNKSİYALAR (askRasim, controlTimer və s.) OLDUĞU KİMİ QALIR
-    const GROQ_API_KEY = "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";
-    let chatHistory = [{ role: "system", content: "Sən Robot Rasimsən. Azərbaycan dilində cavab ver, vaxtları 'X dəqiqə' formatında yaz." }];
-    let activeTimers = {};
-
+    // ⏱️ TAYMER İDARƏETMƏSİ (Başlat, Durdur, Sıfırla)
     function controlTimer(id, action) {
         let t = activeTimers[id];
         if (action === 'start') {
             if (t.interval) return;
             t.interval = setInterval(() => {
-                if (t.seconds > 0) { t.seconds--; updateUI(id); }
-                else { clearInterval(t.interval); t.interval = null; confetti(); }
+                if (t.seconds > 0) {
+                    t.seconds--;
+                    updateUI(id);
+                } else {
+                    clearInterval(t.interval);
+                    t.interval = null;
+                    document.getElementById(`time-${id}`).innerText = "HAZIRDIR! 🔥";
+                    confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+                }
             }, 1000);
-        } else if (action === 'pause') { clearInterval(t.interval); t.interval = null; }
-        else if (action === 'reset') { clearInterval(t.interval); t.interval = null; t.seconds = t.total; updateUI(id); }
+        } else if (action === 'pause') {
+            clearInterval(t.interval);
+            t.interval = null;
+        } else if (action === 'reset') {
+            clearInterval(t.interval);
+            t.interval = null;
+            t.seconds = t.total;
+            updateUI(id);
+        }
     }
 
     function updateUI(id) {
         let t = activeTimers[id];
-        let m = Math.floor(t.seconds/60), s = t.seconds%60;
-        document.getElementById(`time-${id}`).innerText = `${m}:${s<10?'0':''}${s}`;
+        let m = Math.floor(t.seconds / 60);
+        let s = t.seconds % 60;
+        document.getElementById(`time-${id}`).innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
+        document.getElementById(`bar-${id}`).style.width = (t.seconds / t.total) * 100 + "%";
     }
 
+    // 🤖 RASİM İLƏ SÖHBƏT VƏ TAYMER YARATMA
     async function askRasim() {
-        const input = document.getElementById('user-input'), container = document.getElementById('chat-container');
-        const text = input.value.trim(); if (!text) return;
+        const input = document.getElementById('user-input');
+        const container = document.getElementById('chat-container');
+        const text = input.value.trim();
+        
+        if (!text) return;
+
         container.innerHTML += `<div class="bubble user">${text}</div>`;
         chatHistory.push({ role: "user", content: text });
         input.value = "";
+
         const loadId = "load-" + Date.now();
-        container.innerHTML += `<div class="bubble rasim" id="${loadId}">...</div>`;
+        container.innerHTML += `<div class="bubble rasim" id="${loadId}">🤔 Rasim düşünür...</div>`;
         container.scrollTo(0, container.scrollHeight);
 
         try {
             const resp = await fetch("https://api.groq.com/openai/v1/chat/completions", {
                 method: "POST",
-                headers: { "Authorization": `Bearer ${GROQ_API_KEY}`, "Content-Type": "application/json" },
-                body: JSON.stringify({ model: "llama-3.3-70b-versatile", messages: chatHistory })
+                headers: { 
+                    "Authorization": `Bearer ${GROQ_API_KEY}`, 
+                    "Content-Type": "application/json" 
+                },
+                body: JSON.stringify({ 
+                    model: "llama-3.3-70b-versatile", 
+                    messages: chatHistory,
+                    temperature: 0.7
+                })
             });
+
             const data = await resp.json();
             let raw = data.choices[0].message.content;
             chatHistory.push({ role: "assistant", content: raw });
+
             let html = raw.replace(/\n/g, '<br>');
-            const timeRegex = /(\d+)\s*dəqiqə/g; let match;
+            const timeRegex = /(\d+)\s*dəqiqə/g;
+            let match;
+            
             while ((match = timeRegex.exec(raw)) !== null) {
-                let mins = parseInt(match[1]), tid = "t" + Math.random().toString(36).substr(2, 5);
+                let mins = parseInt(match[1]);
+                let tid = "t" + Math.random().toString(36).substr(2, 5);
                 activeTimers[tid] = { seconds: mins * 60, total: mins * 60, interval: null };
-                let ui = `<div class="step-timer"><div class="timer-display" id="time-${tid}">${mins}:00</div><div class="timer-controls"><button class="timer-btn btn-start" onclick="controlTimer('${tid}','start')">Başlat</button><button class="timer-btn btn-pause" onclick="controlTimer('${tid}','pause')">Durdur</button><button class="timer-btn btn-reset" onclick="controlTimer('${tid}','reset')">Sıfırla</button></div></div>`;
+
+                let ui = `
+                <div class="step-timer">
+                    <div class="timer-display" id="time-${tid}">${mins}:00</div>
+                    <div class="progress-bg"><div class="progress-fill" id="bar-${tid}"></div></div>
+                    <div class="timer-controls">
+                        <button class="timer-btn btn-start" onclick="controlTimer('${tid}', 'start')">Başlat</button>
+                        <button class="timer-btn btn-pause" onclick="controlTimer('${tid}', 'pause')">Durdur</button>
+                        <button class="timer-btn btn-reset" onclick="controlTimer('${tid}', 'reset')">Sıfırla</button>
+                    </div>
+                </div>`;
                 html = html.replace(match[0], `<b>${match[0]}</b>${ui}`);
             }
-            document.getElementById(loadId).innerHTML = `🤖 <b>ROBOT RASİM:</b><br>${html}`;
-        } catch (e) { document.getElementById(loadId).innerText = "Xəta baş verdi."; }
-        container.scrollTo(0, container.scrollHeight);
+
+            document.getElementById(loadId).innerHTML = `🤖 <b>ROBOT RASİM:</b><br><br>${html}`;
+        } catch (e) {
+            document.getElementById(loadId).innerText = "🚨 Xəta baş verdi, bir az sonra yoxla.";
+        }
+        
+        // Klaviaturanın yazı yerini bağlamaması üçün fokuslanma
+        setTimeout(() => {
+            container.scrollTo(0, container.scrollHeight);
+        }, 300);
     }
 </script>
 </body>
