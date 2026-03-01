@@ -14,7 +14,7 @@
 <header>
     <div class="header-left">
         <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Rasim&backgroundColor=ff4757" class="rasim-avatar" alt="Rasim">
-        <div><h3 style="margin:0">Foodis</h3><small>Rasim Ultra 2.0</small></div>
+        <div><h3 style="margin:0">Foodis 🍳</h3><small>Rasim: Yaddaşlı Kömekçi 🤖🧠</small></div>
     </div>
     <button class="mode-toggle-btn" id="theme-btn" onclick="toggleDarkMode()">☀️</button>
 </header>
@@ -22,22 +22,27 @@
 <div id="chat-container">
     <div class="bubble rasim">
         🤖 <b>ROBOT RASİM</b><br>
-        Mətbəxin ağası gəldi! Soyuducuda nə var? De gəlsin, sənə ən yaxşı resepti verim!
+        Salam! 🌟 Mətbəxin ağası gəldi! Artıq hər şeyi yadda saxlayıram. 🧠 Soyuducuda nə var? De gəlsin! 👨‍🍳🔥
     </div>
 </div>
 
 <div class="input-area">
-    <input type="text" id="user-input" placeholder="Məs: 2 nəfərik, toyuq..." onkeypress="if(event.key==='Enter') askRasim()">
-    <button class="btn-send" onclick="askRasim()">Rasimə De</button>
+    <input type="text" id="user-input" placeholder="Məs: Boyaq dediyim reseptdə nə qədər duz var idi? 🍗" onkeypress="if(event.key==='Enter') askRasim()">
+    <button class="btn-send" onclick="askRasim()">Rasimə De 🚀</button>
 </div>
 
 <script>
     const GROQ_API_KEY = "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";
+    
+    // YADDAŞ ÜÇÜN TARİXÇƏ MASSİVİ 🧠
+    let chatHistory = [
+        { role: "system", content: "Sən Robot Rasimsən. Səmimi Azərbaycan dilində və bol-bol emojilərlə cavab ver. Sənə verilən əvvəlki mesajları yadda saxla və onlara istinad et. Əgər bişirmə müddəti varsa, mütləq 'MÜDDƏT: [Rəqəm] dəqiqə' formatında qeyd et." }
+    ];
 
     function createBgIcons() {
         const container = document.getElementById('bg-icons');
-        const icons = ['🍎', '🥦', '🍗', '🥘', '🍅'];
-        for (let i = 0; i < 15; i++) {
+        const icons = ['🍎', '🥦', '🍗', '🥘', '🍅', '🍳', '🧂', '🍕'];
+        for (let i = 0; i < 20; i++) {
             const icon = document.createElement('div');
             icon.className = 'floating-icon';
             icon.innerText = icons[Math.floor(Math.random() * icons.length)];
@@ -53,14 +58,12 @@
         document.getElementById('theme-btn').innerText = document.body.classList.contains('dark-mode') ? '🌙' : '☀️';
     }
 
-    // CANLI VİZUAL TAYMER (BÖYÜK)
     function startVisualTimer(id, minutes) {
         let seconds = minutes * 60;
         const total = seconds;
         const display = document.getElementById(`time-txt-${id}`);
         const bar = document.getElementById(`bar-${id}`);
         const btn = document.getElementById(`btn-${id}`);
-        
         btn.style.display = 'none'; 
         
         const interval = setInterval(() => {
@@ -68,17 +71,14 @@
             let mins = Math.floor(seconds / 60);
             let secs = seconds % 60;
             display.innerText = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
-            
             let percent = (seconds / total) * 100;
             bar.style.width = percent + "%";
 
             if (seconds <= 0) {
                 clearInterval(interval);
-                display.innerText = "HAZIRDIR! 🥘";
-                display.style.fontSize = "2.5rem";
-                confetti({ particleCount: 200, spread: 100 });
-                let audio = new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg');
-                audio.play();
+                display.innerText = "HAZIRDIR! 🥘🔥";
+                confetti({ particleCount: 250, spread: 120 });
+                new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg').play();
             }
         }, 1000);
     }
@@ -89,23 +89,13 @@
         const text = input.value.trim();
         if (!text) return;
 
-        container.innerHTML += `<div class="bubble user">${text}</div>`;
+        // İstifadəçi mesajını ekrana əlavə et və yaddaşa yaz
+        container.innerHTML += `<div class="bubble user">😊 ${text}</div>`;
+        chatHistory.push({ role: "user", content: text });
         input.value = "";
 
-        // Spotify Pleylisti
-        if (text.toLowerCase().includes("mahnı") || text.toLowerCase().includes("musiqi")) {
-            container.innerHTML += `
-                <div class="bubble rasim">
-                    🎵 <b>RASİM PLEYLİST</b><br>
-                    Mətbəx üçün pleylist hazırlandı!<br>
-                    <iframe class="spotify-box" src="https://open.spotify.com/embed/playlist/37i9dQZF1DXbITWG1ZJKYp" allow="encrypted-media"></iframe>
-                </div>`;
-            container.scrollTo(0, container.scrollHeight);
-            return;
-        }
-
         const loadingId = "loading-" + Date.now();
-        container.innerHTML += `<div class="bubble rasim" id="${loadingId}">Rasim düşünür...</div>`;
+        container.innerHTML += `<div class="bubble rasim" id="${loadingId}">🤖 Düşünürəm... 🤔💭</div>`;
         container.scrollTo(0, container.scrollHeight);
 
         try {
@@ -114,33 +104,37 @@
                 headers: { "Authorization": `Bearer ${GROQ_API_KEY}`, "Content-Type": "application/json" },
                 body: JSON.stringify({
                     model: "llama-3.3-70b-versatile",
-                    messages: [{ role: "system", content: "Sən Robot Rasimsən. Səmimi Azərbaycan dilində cavab ver. Əgər bişirmə müddəti varsa, mütləq 'MÜDDƏT: [Rəqəm] dəqiqə' formatında qeyd et." }, { role: "user", content: text }]
+                    messages: chatHistory // BÜTÜN TARİXÇƏNİ GÖNDƏRİRİK 🧠
                 })
             });
 
             const data = await response.json();
-            let rasimText = data.choices[0].message.content;
+            let rasimResponse = data.choices[0].message.content;
 
-            // Taymer tap
-            const timeMatch = rasimText.match(/MÜDDƏT:\s*(\d+)/);
+            // Rasimin cavabını da yaddaşa əlavə et
+            chatHistory.push({ role: "assistant", content: rasimResponse });
+
+            const timeMatch = rasimResponse.match(/MÜDDƏT:\s*(\d+)/);
             const timerId = Date.now();
             let timerHtml = "";
             if (timeMatch) {
                 timerHtml = `
                     <div class="timer-container">
-                        <div style="font-weight:bold; margin-bottom:10px; color:var(--text)">Mətbəxt Taymeri</div>
+                        <div style="font-weight:bold; margin-bottom:10px; color:var(--text); font-size:1.2rem">⏰ Mətbəxt Taymeri</div>
                         <div class="timer-display" id="time-txt-${timerId}">${timeMatch[1]}:00</div>
                         <div class="progress-bg"><div class="progress-fill" id="bar-${timerId}"></div></div>
-                        <button class="btn-send" id="btn-${timerId}" style="margin-top:20px; width:100%; font-size:1.1rem" onclick="startVisualTimer('${timerId}', ${timeMatch[1]})">Vaxdı Başlat</button>
+                        <button class="btn-send" id="btn-${timerId}" style="margin-top:25px; width:100%; font-size:1.2rem" onclick="startVisualTimer('${timerId}', ${timeMatch[1]})">Vaxdı Başlat ⚡</button>
                     </div>`;
             }
 
             document.getElementById(loadingId).innerHTML = `
                 🤖 <b>ROBOT RASİM</b><br><br>
-                ${rasimText.replace(/\n/g, '<br>')}
+                ${rasimResponse.replace(/\n/g, '<br>')}
                 ${timerHtml}
             `;
-        } catch (e) { document.getElementById(loadingId).innerText = "Rasimin beyni qızdı, bir az sonra yoxla!"; }
+        } catch (e) { 
+            document.getElementById(loadingId).innerText = "🚨 Limit doldu və ya xəta baş verdi! Bir az gözlə gəlirəm. 🤯"; 
+        }
         container.scrollTo(0, container.scrollHeight);
     }
 </script>
