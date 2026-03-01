@@ -1,162 +1,48 @@
 :root {
     --primary: #ff4757;
     --secondary: #2ed573;
-    --glass: rgba(255, 255, 255, 0.2);
-    --glass-border: rgba(255, 255, 255, 0.3);
-    --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    --glass: rgba(255, 255, 255, 0.8);
     --text: #2f3542;
 }
 
-body.dark-mode {
-    --bg-gradient: linear-gradient(135deg, #2f3542 0%, #1e272e 100%);
-    --glass: rgba(0, 0, 0, 0.4);
-    --glass-border: rgba(255, 255, 255, 0.1);
-    --text: #f1f2f6;
-}
-
 body {
-    font-family: 'Segoe UI', Tahoma, sans-serif;
-    background: var(--bg-gradient);
-    background-attachment: fixed;
-    color: var(--text);
-    margin: 0; display: flex; flex-direction: column;
-    height: 100vh; overflow: hidden;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    margin: 0; height: 100vh; display: flex; flex-direction: column; overflow: hidden;
 }
-
-.bg-icons {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    z-index: -1; pointer-events: none; overflow: hidden;
-}
-
-.floating-icon { position: absolute; font-size: 2rem; opacity: 0.15; animation: float 12s infinite linear; }
-@keyframes float { 0% { transform: translateY(110vh) rotate(0deg); } 100% { transform: translateY(-10vh) rotate(360deg); } }
 
 header {
-    background: var(--glass); backdrop-filter: blur(15px);
-    border-bottom: 1px solid var(--glass-border);
-    padding: 10px 25px; display: flex; justify-content: space-between; align-items: center;
-    z-index: 10;
+    background: white; padding: 10px 20px; display: flex; align-items: center;
+    border-bottom: 2px solid #eee; box-shadow: 0 2px 10px rgba(0,0,0,0.05);
 }
 
-#chat-container {
-    flex: 1; padding: 20px; overflow-y: auto;
-    display: flex; flex-direction: column; gap: 20px; scroll-behavior: smooth;
-}
-
-.bubble {
-    max-width: 85%; padding: 18px 25px; border-radius: 25px;
-    backdrop-filter: blur(10px); background: var(--glass);
-    border: 1px solid var(--glass-border); box-shadow: 0 8px 32px rgba(0,0,0,0.08);
-}
-
-.user { align-self: flex-end; background: var(--secondary); color: white; border-bottom-right-radius: 4px; }
-.rasim { align-self: flex-start; border-bottom-left-radius: 4px; }
-
-/* ADDIM TAYMERİ DİZAYNI */
-.step-timer {
-    background: rgba(255, 71, 87, 0.1);
-    padding: 15px; border-radius: 20px; margin: 15px 0;
-    border: 2px solid var(--primary); text-align: center;
-}
-
-.timer-display { font-size: 2.2rem; font-weight: 800; color: var(--primary); margin-bottom: 5px; font-family: monospace; }
-.progress-bg { width: 100%; background: rgba(0,0,0,0.1); height: 8px; border-radius: 4px; overflow: hidden; }
-.progress-fill { height: 100%; background: var(--primary); width: 100%; transition: 0.3s linear; }
-
-.timer-controls { display: flex; gap: 8px; justify-content: center; margin-top: 12px; }
-.timer-btn { padding: 6px 12px; border-radius: 12px; border: none; cursor: pointer; font-weight: bold; font-size: 0.75rem; }
-.btn-start { background: var(--primary); color: white; }
-.btn-pause { background: #ffa502; color: white; }
-.btn-reset { background: #747d8c; color: white; }
-
-.input-area {
-    background: var(--glass); backdrop-filter: blur(20px);
-    padding: 15px 25px; display: flex; gap: 10px; border-top: 1px solid var(--glass-border);
-}
-
-input { flex: 1; padding: 12px 20px; border-radius: 30px; border: 1px solid var(--glass-border); background: rgba(255, 255, 255, 0.1); color: var(--text); }
-.btn-send { background: var(--primary); color: white; border: none; padding: 10px 25px; border-radius: 30px; cursor: pointer; font-weight: bold; }:root {
-    --primary: #ff4757;
-    --secondary: #2ed573;
-    --glass: rgba(255, 255, 255, 0.2);
-    --glass-border: rgba(255, 255, 255, 0.3);
-    --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-    --text: #2f3542;
-}
-
-body.dark-mode {
-    --bg-gradient: linear-gradient(135deg, #2f3542 0%, #1e272e 100%);
-    --glass: rgba(0, 0, 0, 0.4);
-    --glass-border: rgba(255, 255, 255, 0.1);
-    --text: #f1f2f6;
-}
-
-body {
-    font-family: 'Segoe UI', Tahoma, sans-serif;
-    background: var(--bg-gradient);
-    background-attachment: fixed;
-    color: var(--text);
-    margin: 0; display: flex; flex-direction: column;
-    height: 100vh; overflow: hidden;
-}
-
-.bg-icons {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    z-index: -1; pointer-events: none; overflow: hidden;
-}
-
-.floating-icon { position: absolute; font-size: 2rem; opacity: 0.15; animation: float 12s infinite linear; }
-@keyframes float { 0% { transform: translateY(110vh) rotate(0deg); } 100% { transform: translateY(-10vh) rotate(360deg); } }
-
-header {
-    background: var(--glass); backdrop-filter: blur(15px);
-    border-bottom: 1px solid var(--glass-border);
-    padding: 10px 25px; display: flex; justify-content: space-between; align-items: center;
-    z-index: 10;
-}
-
-#chat-container {
-    flex: 1; padding: 20px; overflow-y: auto;
-    display: flex; flex-direction: column; gap: 20px; scroll-behavior: smooth;
-}
-
-.bubble {
-    max-width: 85%; padding: 18px 25px; border-radius: 25px;
-    backdrop-filter: blur(10px); background: var(--glass);
-    border: 1px solid var(--glass-border); box-shadow: 0 8px 32px rgba(0,0,0,0.08);
-}
-
-.user { align-self: flex-end; background: var(--secondary); color: white; border-bottom-right-radius: 4px; }
-.rasim { align-self: flex-start; border-bottom-left-radius: 4px; }
-
-/* ADDIM TAYMERİ DİZAYNI */
-.step-timer {
-    background: rgba(255, 71, 87, 0.1);
-    padding: 15px; border-radius: 20px; margin: 15px 0;
-    border: 2px solid var(--primary); text-align: center;
-}
-
-.timer-display { font-size: 2.2rem; font-weight: 800; color: var(--primary); margin-bottom: 5px; font-family: monospace; }
-.progress-bg { width: 100%; background: rgba(0,0,0,0.1); height: 8px; border-radius: 4px; overflow: hidden; }
-.progress-fill { height: 100%; background: var(--primary); width: 100%; transition: 0.3s linear; }
-
-.timer-controls { display: flex; gap: 8px; justify-content: center; margin-top: 12px; }
-.timer-btn { padding: 6px 12px; border-radius: 12px; border: none; cursor: pointer; font-weight: bold; font-size: 0.75rem; }
-.btn-start { background: var(--primary); color: white; }
-.btn-pause { background: #ffa502; color: white; }
-.btn-reset { background: #747d8c; color: white; }
-
-.input-area {
-    background: var(--glass); backdrop-filter: blur(20px);
-    padding: 15px 25px; display: flex; gap: 10px; border-top: 1px solid var(--glass-border);
-}
+/* LOQO STİLİ */
 .rasim-logo {
-    width: 50px;           /* Loqonun eni */
-    height: 50px;          /* Loqonun hündürlüyü */
-    object-fit: contain;    /* Şəkli əzilməyə qoymur */
-    border-radius: 10px;    /* Künclərini bir az oval edir */
-    margin-right: 10px;     /* Yazı ilə loqo arasında məsafə qoyur */
-    background: #1a1a1a;    /* Sənin loqon qara fondadırsa, bura uyğun rəng verə bilərik */
+    width: 50px; height: 50px;
+    object-fit: cover; border-radius: 8px;
+    margin-right: 15px; border: 2px solid var(--primary);
 }
-input { flex: 1; padding: 12px 20px; border-radius: 30px; border: 1px solid var(--glass-border); background: rgba(255, 255, 255, 0.1); color: var(--text); }
-.btn-send { background: var(--primary); color: white; border: none; padding: 10px 25px; border-radius: 30px; cursor: pointer; font-weight: bold; }
+
+#chat-container { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
+
+.bubble { max-width: 80%; padding: 15px 20px; border-radius: 20px; line-height: 1.5; }
+.rasim { align-self: flex-start; background: white; border: 1px solid #ddd; }
+.user { align-self: flex-end; background: var(--secondary); color: white; }
+
+/* TAYMER STİLLƏRİ */
+.step-timer {
+    background: #fff0f0; padding: 15px; border-radius: 15px;
+    border: 2px solid var(--primary); margin: 10px 0; text-align: center;
+}
+.timer-display { font-size: 2rem; font-weight: bold; color: var(--primary); font-family: monospace; }
+.progress-bg { width: 100%; background: #ddd; height: 8px; border-radius: 4px; margin: 10px 0; }
+.progress-fill { height: 100%; background: var(--primary); width: 100%; transition: 0.3s; }
+.timer-controls { display: flex; gap: 5px; justify-content: center; }
+.timer-btn { padding: 5px 10px; border-radius: 8px; border: none; cursor: pointer; font-size: 0.8rem; font-weight: bold; }
+.btn-start { background: var(--primary); color: white; }
+.btn-pause { background: #ffa502; color: white; }
+.btn-reset { background: #747d8c; color: white; }
+
+.input-area { padding: 20px; background: white; display: flex; gap: 10px; border-top: 1px solid #eee; }
+input { flex: 1; padding: 12px; border-radius: 25px; border: 1px solid #ddd; outline: none; }
+.btn-send { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 25px; cursor: pointer; }
