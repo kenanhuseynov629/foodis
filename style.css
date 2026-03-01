@@ -1,79 +1,118 @@
 :root {
     --primary: #ff4757;
     --secondary: #2ed573;
-    --glass: rgba(255, 255, 255, 0.8);
+    --glass: rgba(255, 255, 255, 0.9);
     --text: #2f3542;
 }
+
+* { box-sizing: border-box; } /* Telefonda kənara çıxmaların qarşısını alır */
 
 body {
     font-family: 'Segoe UI', Tahoma, sans-serif;
     background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-    margin: 0; height: 100vh; display: flex; flex-direction: column; 
-    overflow: hidden; position: relative;
+    margin: 0; 
+    height: 100dvh; /* Mobil brauzerlərin alt paneli üçün düzəliş */
+    display: flex; 
+    flex-direction: column; 
+    overflow: hidden; 
+    position: relative;
 }
 
-/* 🍎 ARXADAKI QABARCIQLAR (ANIMASIYA) */
+/* 🍎 QABARCIQLAR */
 .bg-icons {
     position: absolute; top: 0; left: 0; width: 100%; height: 100%;
     z-index: -1; pointer-events: none; overflow: hidden;
 }
-
 .floating-icon {
-    position: absolute; font-size: 2.5rem; opacity: 0.2;
-    animation: float 15s infinite linear;
+    position: absolute; font-size: 1.5rem; opacity: 0.15;
+    animation: float 12s infinite linear;
 }
-
 @keyframes float {
     0% { transform: translateY(110vh) rotate(0deg); }
     100% { transform: translateY(-10vh) rotate(360deg); }
 }
 
 header {
-    background: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(10px);
-    padding: 10px 25px; display: flex; align-items: center;
-    border-bottom: 2px solid #eee; z-index: 10;
+    background: var(--glass);
+    padding: 10px 15px; 
+    display: flex; 
+    align-items: center;
+    border-bottom: 1px solid #ddd; 
+    z-index: 10;
+    min-height: 60px;
 }
 
+/* 🖼️ LOQO DÜZƏLİŞİ */
 .rasim-logo {
-    width: 50px; height: 50px; border-radius: 10px;
-    object-fit: cover; border: 2px solid var(--primary);
-    margin-right: 15px; background: #000;
+    width: 45px; 
+    height: 45px; 
+    border-radius: 8px;
+    object-fit: contain; /* Şəkli əzmir */
+    border: 2px solid var(--primary);
+    margin-right: 12px;
+    background: #000; /* Loqon qara fondadırsa uyğun olar */
 }
+
+header h3 { font-size: 1.1rem; margin: 0; }
+header small { font-size: 0.75rem; color: #777; }
 
 #chat-container {
-    flex: 1; padding: 20px; overflow-y: auto;
-    display: flex; flex-direction: column; gap: 20px;
+    flex: 1; 
+    padding: 15px; 
+    overflow-y: auto;
+    display: flex; 
+    flex-direction: column; 
+    gap: 15px;
+    background: rgba(255,255,255,0.3);
 }
 
 .bubble {
-    max-width: 80%; padding: 15px 25px; border-radius: 25px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    max-width: 90%; /* Telefonda daha geniş görünsün */
+    padding: 12px 18px; 
+    border-radius: 20px;
+    font-size: 0.95rem;
+    word-wrap: break-word; /* Uzun sözləri bölür */
 }
 
-.rasim { align-self: flex-start; background: white; border-bottom-left-radius: 5px; }
-.user { align-self: flex-end; background: var(--secondary); color: white; border-bottom-right-radius: 5px; }
+.rasim { align-self: flex-start; background: white; border: 1px solid #eee; }
+.user { align-self: flex-end; background: var(--secondary); color: white; }
 
-/* ⏱️ TAYMER DİZAYNI */
+/* ⏱️ MOBİL TAYMER */
 .step-timer {
-    background: #fff5f5; padding: 15px; border-radius: 20px;
-    border: 2px solid var(--primary); margin: 15px 0; text-align: center;
+    background: #fff5f5; padding: 12px; border-radius: 15px;
+    border: 2px solid var(--primary); margin: 10px 0; width: 100%;
 }
-
-.timer-display { font-size: 2.2rem; font-weight: 800; color: var(--primary); font-family: monospace; }
-.progress-bg { width: 100%; background: #eee; height: 10px; border-radius: 5px; margin: 10px 0; overflow: hidden; }
-.progress-fill { height: 100%; background: var(--primary); width: 100%; transition: 0.3s; }
-
-.timer-controls { display: flex; gap: 10px; justify-content: center; }
-.timer-btn { padding: 8px 15px; border-radius: 12px; border: none; cursor: pointer; font-weight: bold; }
+.timer-display { font-size: 1.8rem; font-weight: bold; color: var(--primary); }
+.timer-controls { display: flex; gap: 5px; justify-content: center; flex-wrap: wrap; }
+.timer-btn { padding: 6px 10px; border-radius: 8px; font-size: 0.8rem; border: none; cursor: pointer; }
 .btn-start { background: var(--primary); color: white; }
 .btn-pause { background: #ffa502; color: white; }
 .btn-reset { background: #747d8c; color: white; }
 
 .input-area {
-    background: white; padding: 20px; display: flex; gap: 10px;
+    background: white; 
+    padding: 10px 15px; 
+    display: flex; 
+    gap: 8px;
     border-top: 1px solid #eee;
+    padding-bottom: env(safe-area-inset-bottom); /* iPhone üçün boşluq */
 }
 
-input { flex: 1; padding: 12px 20px; border-radius: 30px; border: 1px solid #ddd; outline: none; }
-.btn-send { background: var(--primary); color: white; border: none; padding: 10px 25px; border-radius: 30px; cursor: pointer; font-weight: bold; }
+input { 
+    flex: 1; 
+    padding: 10px 15px; 
+    border-radius: 20px; 
+    border: 1px solid #ddd; 
+    outline: none; 
+    font-size: 16px; /* Telefonda zoom-un qarşısını alır */
+}
+
+.btn-send { 
+    background: var(--primary); 
+    color: white; 
+    border: none; 
+    padding: 10px 15px; 
+    border-radius: 20px; 
+    font-weight: bold;
+    white-space: nowrap;
+}
