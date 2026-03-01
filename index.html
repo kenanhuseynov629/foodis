@@ -13,13 +13,10 @@
         .rasim { background: white; align-self: flex-start; border-bottom-left-radius: 2px; border: 1px solid #ddd; }
         .user { background: var(--secondary); color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
         .label { display: block; font-size: 11px; margin-bottom: 5px; font-weight: bold; text-transform: uppercase; color: #888; }
-        .user .label { color: #e0e0e0; }
         .input-area { background: white; padding: 20px; display: flex; gap: 10px; border-top: 1px solid #ddd; }
         input { flex: 1; padding: 15px; border: 2px solid #eee; border-radius: 30px; outline: none; font-size: 16px; }
-        input:focus { border-color: var(--primary); }
         button { background: var(--primary); color: white; border: none; padding: 0 25px; border-radius: 30px; cursor: pointer; font-weight: bold; }
-        .typing { font-style: italic; color: #777; animation: blink 1.5s infinite; }
-        @keyframes blink { 50% { opacity: 0.5; } }
+        .typing { font-style: italic; color: #777; }
     </style>
 </head>
 <body>
@@ -32,20 +29,20 @@
 <div id="chat-container">
     <div class="bubble rasim">
         <span class="label">🤖 Robot Rasim</span>
-        Salam! Mən Rasim. Soyuducuda nə var? De gəlsin, sənə kral bir resept verim!
+        Salam! Kalbasa-yumurta hazırdır? De gəlsin, görək nə bişiririk!
     </div>
 </div>
 
 <div class="input-area">
-    <input type="text" id="user-input" placeholder="Məs: yumurta, pomidor, pendir..." onkeypress="if(event.key==='Enter') askRasim()">
+    <input type="text" id="user-input" placeholder="Məs: yumurta, pomidor..." onkeypress="if(event.key==='Enter') askRasim()">
     <button onclick="askRasim()">Rasimə De</button>
 </div>
 
 <script type="module">
+    // Kitabxananın ən stabil versiyasını çağırırıq
     import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
 
-    // API açarını bura daxil etdiyindən əmin ol
-    const API_KEY = "AIzaSyAdwswjgW9U_irY7NijpTRgG8kxlyVGYlA"; 
+    const API_KEY = "AIzaSyAdwswjgW9U_irY7NijpTRgG8kxlyVGY1A"; 
     const genAI = new GoogleGenerativeAI(API_KEY);
 
     window.askRasim = async function() {
@@ -55,34 +52,35 @@
 
         if (!text) return;
 
-        // İstifadəçi mesajı
         container.innerHTML += `<div class="bubble user"><span class="label">Sən</span>${text}</div>`;
         input.value = "";
         
-        // Yükləmə mesajı
         const loadingId = "loading-" + Date.now();
-        container.innerHTML += `<div class="bubble rasim typing" id="${loadingId}"><span class="label">🤖 Robot Rasim</span>Rasim qazanları qarışdırır... 🥘</div>`;
+        container.innerHTML += `<div class="bubble rasim typing" id="${loadingId}"><span class="label">🤖 Robot Rasim</span>Rasim düşünür... 🤔</div>`;
         container.scrollTop = container.scrollHeight;
 
         try {
-            // DƏYİŞİKLİK: Model adını ən stabil "gemini-1.5-flash" olaraq təyin etdik
-            const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+            // ƏSAS DƏYİŞİKLİK BURADADIR: "gemini-pro" modelini sınaqdan keçiririk
+            // Bu model 1.5-flash-dan daha stabil qoşulur bəzi regionlarda
+            const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
-            const prompt = `Sən Foodis saytında Azərbaycanlı aşpaz Robot Rasimsən. 
-            Çox səmimi, xalq dilində danışan, zarafatcıl birisən. 
-            İstifadəçi sənə bu ərzaqları verir: ${text}. 
-            Ona bir yemək təklif et, resepti qısa yaz və kalorisini de.`;
-
-            const result = await model.generateContent(prompt);
+            const result = await model.generateContent(`Sən Foodis saytında Robot Rasimsən. Azərbaycan dilində danışırsan. İstifadəçinin bu ərzaqları var: ${text}. Ona ləzzətli bir resept ver.`);
             const response = await result.response;
             const rasimText = response.text();
 
-            const loadingBubble = document.getElementById(loadingId);
-            loadingBubble.classList.remove('typing');
-            loadingBubble.innerHTML = `<span class="label">🤖 Robot Rasim</span>${rasimText.replace(/\n/g, '<br>')}`;
+            document.getElementById(loadingId).classList.remove('typing');
+            document.getElementById(loadingId).innerHTML = `<span class="label">🤖 Robot Rasim</span>${rasimText.replace(/\n/g, '<br>')}`;
         } catch (error) {
-            console.error("Xəta baş verdi:", error);
-            document.getElementById(loadingId).innerHTML = `<span class="label">🤖 Robot Rasim</span>Ay daa, başım qarışdı! 🤯 Bir də yaz görüm, nəyin var idi?`;
+            console.error(error);
+            // Əgər gemini-pro da xəta versə, avtomatik flash-a keçid cəhdi:
+            try {
+                const altModel = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
+                const altResult = await altModel.generateContent(`Ərzaqlar: ${text}. Resept de.`);
+                const altRes = await altResult.response;
+                document.getElementById(loadingId).innerHTML = `<span class="label">🤖 Robot Rasim</span>${altRes.text().replace(/\n/g, '<br>')}`;
+            } catch (e2) {
+                document.getElementById(loadingId).innerHTML = `<span class="label">🤖 Robot Rasim</span>Ay daa, Google-un serverləri mənə cavab vermir. Bir az sonra yenidən yoxla! 🤯`;
+            }
         }
         container.scrollTop = container.scrollHeight;
     }
