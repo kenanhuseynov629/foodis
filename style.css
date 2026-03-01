@@ -1,0 +1,176 @@
+:root {
+    --primary: #ff4757;
+    --secondary: #2ed573;
+    --glass: rgba(255, 255, 255, 0.2);
+    --glass-border: rgba(255, 255, 255, 0.3);
+    --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    --text: #2f3542;
+}
+
+body.dark-mode {
+    --bg-gradient: linear-gradient(135deg, #2f3542 0%, #1e272e 100%);
+    --glass: rgba(0, 0, 0, 0.4);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --text: #f1f2f6;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background: var(--bg-gradient);
+    background-attachment: fixed;
+    color: var(--text);
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+    transition: 0.5s ease;
+}
+
+/* Hərəkətli Fon İkonları */
+.bg-icons {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: -1;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.floating-icon {
+    position: absolute;
+    font-size: 2rem;
+    opacity: 0.15;
+    animation: float 12s infinite linear;
+}
+
+@keyframes float {
+    0% { transform: translateY(110vh) rotate(0deg); }
+    100% { transform: translateY(-10vh) rotate(360deg); }
+}
+
+/* Header Dizaynı */
+header {
+    background: var(--glass);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-bottom: 1px solid var(--glass-border);
+    padding: 15px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 10;
+}
+
+.header-left { display: flex; align-items: center; gap: 15px; }
+.rasim-avatar { 
+    width: 50px; 
+    height: 50px; 
+    border-radius: 50%; 
+    border: 2px solid var(--primary); 
+    background: white; 
+    box-shadow: 0 0 15px rgba(255, 71, 87, 0.3);
+}
+
+/* Çat Sahəsi */
+#chat-container {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    scroll-behavior: smooth;
+}
+
+.bubble {
+    max-width: 80%;
+    padding: 15px 20px;
+    border-radius: 25px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    animation: fadeIn 0.5s ease forwards;
+    line-height: 1.6;
+}
+
+@keyframes fadeIn { 
+    from { opacity: 0; transform: translateY(15px); } 
+    to { opacity: 1; transform: translateY(0); } 
+}
+
+.user { align-self: flex-end; background: var(--secondary); color: white; border-bottom-right-radius: 5px; }
+.rasim { align-self: flex-start; border-bottom-left-radius: 5px; }
+
+/* Səs Dalğası Animasiyası */
+.voice-wave {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    height: 20px;
+    margin-top: 10px;
+}
+.wave-bar {
+    width: 3px;
+    height: 8px;
+    background: var(--primary);
+    border-radius: 3px;
+    animation: wave 1s infinite ease-in-out;
+}
+@keyframes wave { 0%, 100% { height: 8px; } 50% { height: 20px; } }
+.wave-bar:nth-child(2) { animation-delay: 0.2s; }
+.wave-bar:nth-child(3) { animation-delay: 0.4s; }
+.wave-bar:nth-child(4) { animation-delay: 0.6s; }
+
+/* Progress Bar */
+.progress-container { width: 100%; background: rgba(0,0,0,0.1); border-radius: 10px; height: 8px; margin: 10px 0; overflow: hidden; }
+.progress-bar { height: 100%; background: var(--primary); width: 0%; transition: 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+
+/* Giriş Sahəsi */
+.input-area {
+    background: var(--glass);
+    backdrop-filter: blur(20px);
+    padding: 20px 25px;
+    display: flex;
+    gap: 15px;
+    border-top: 1px solid var(--glass-border);
+}
+
+input {
+    flex: 1;
+    padding: 15px 25px;
+    border-radius: 30px;
+    border: 1px solid var(--glass-border);
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text);
+    outline: none;
+    font-size: 16px;
+}
+
+.btn {
+    border: none;
+    padding: 12px 25px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.btn-send { 
+    background: var(--primary); 
+    color: white; 
+    box-shadow: 0 4px 15px rgba(255, 71, 87, 0.4); 
+}
+
+.share-btn {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 8px 18px;
+    background: #25D366;
+    color: white;
+    border-radius: 20px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+}
