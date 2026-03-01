@@ -28,8 +28,7 @@ body {
 }
 
 .bg-icons {
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
     z-index: -1; pointer-events: none; overflow: hidden;
 }
 
@@ -44,24 +43,18 @@ body {
 }
 
 header {
-    background: var(--glass);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
+    background: var(--glass); backdrop-filter: blur(15px);
     border-bottom: 1px solid var(--glass-border);
-    padding: 10px 25px;
-    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 25px; display: flex; justify-content: space-between; align-items: center;
     z-index: 10;
 }
 
 .header-left { display: flex; align-items: center; gap: 12px; }
-.rasim-avatar { 
-    width: 45px; height: 45px; border-radius: 50%; 
-    border: 2px solid var(--primary); background: white; 
-}
+.rasim-avatar { width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--primary); background: white; }
 
 .mode-toggle-btn {
     background: var(--glass); border: 1px solid var(--glass-border);
-    font-size: 1.4rem; width: 45px; height: 45px; border-radius: 50%; cursor: pointer;
+    font-size: 1.2rem; width: 40px; height: 40px; border-radius: 50%; cursor: pointer;
     display: flex; align-items: center; justify-content: center;
 }
 
@@ -72,47 +65,47 @@ header {
 
 .bubble {
     max-width: 85%; padding: 18px 25px; border-radius: 30px;
-    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-    background: var(--glass); border: 1px solid var(--glass-border);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.08); animation: fadeIn 0.4s ease forwards;
+    backdrop-filter: blur(10px); background: var(--glass);
+    border: 1px solid var(--glass-border); box-shadow: 0 8px 32px rgba(0,0,0,0.08);
 }
 
 .user { align-self: flex-end; background: var(--secondary); color: white; border-bottom-right-radius: 4px; }
 .rasim { align-self: flex-start; border-bottom-left-radius: 4px; }
 
-.timer-container {
+/* RESEPT ADDIMI TAYMERİ */
+.step-timer {
     background: rgba(255, 71, 87, 0.1);
-    padding: 30px; border-radius: 35px; margin: 20px 0;
-    border: 3px solid var(--primary); text-align: center;
+    padding: 15px; border-radius: 20px; margin: 10px 0;
+    border: 2px solid var(--primary); text-align: center;
 }
 
 .timer-display {
-    font-size: 4rem; font-weight: 900; color: var(--primary);
-    margin-bottom: 15px; font-family: 'Monaco', 'Courier New', monospace;
+    font-size: 2.5rem; font-weight: 800; color: var(--primary);
+    margin-bottom: 10px; font-family: monospace;
 }
 
-.progress-bg {
-    width: 100%; background: rgba(0, 0, 0, 0.1);
-    height: 18px; border-radius: 12px; overflow: hidden;
+.timer-controls { display: flex; gap: 8px; justify-content: center; margin-top: 10px; }
+
+.timer-btn {
+    padding: 8px 15px; border-radius: 15px; border: none;
+    cursor: pointer; font-weight: bold; font-size: 0.8rem; transition: 0.2s;
 }
 
-.progress-fill {
-    height: 100%; background: var(--primary); width: 100%;
-    transition: 1s linear;
-}
+.btn-start { background: var(--primary); color: white; }
+.btn-pause { background: #ffa502; color: white; }
+.btn-reset { background: #747d8c; color: white; }
+
+.progress-bg { width: 100%; background: rgba(0,0,0,0.1); height: 10px; border-radius: 5px; overflow: hidden; }
+.progress-fill { height: 100%; background: var(--primary); width: 100%; transition: 0.2s linear; }
 
 .input-area {
     background: var(--glass); backdrop-filter: blur(20px);
-    padding: 20px 25px; display: flex; gap: 10px; border-top: 1px solid var(--glass-border);
+    padding: 15px 25px; display: flex; gap: 10px; border-top: 1px solid var(--glass-border);
 }
 
 input {
-    flex: 1; padding: 15px 25px; border-radius: 40px;
-    border: 1px solid var(--glass-border); background: rgba(255, 255, 255, 0.1);
-    color: var(--text); outline: none; font-size: 16px;
+    flex: 1; padding: 12px 20px; border-radius: 30px;
+    border: 1px solid var(--glass-border); background: rgba(255, 255, 255, 0.1); color: var(--text);
 }
 
-.btn-send { 
-    background: var(--primary); color: white; border: none;
-    padding: 12px 30px; border-radius: 40px; cursor: pointer; font-weight: bold;
-}
+.btn-send { background: var(--primary); color: white; border: none; padding: 10px 25px; border-radius: 30px; cursor: pointer; font-weight: bold; }
