@@ -11,27 +11,27 @@
 <div class="bg-icons" id="bg-icons"></div>
 <header>
     <div class="header-left">
-        <img src="logo.png" class="rasim-logo" alt="Foodis Loqo">
+        <img src="logo.jpg" class="rasim-logo" alt="Foodis Loqo">
         <div>
             <h3 style="margin:0">Foodis 🍳</h3>
             <small>Rasim: Smart Timer Edition 🤖</small>
         </div>
     </div>
-    <button class="mode-toggle-btn" id="theme-btn" onclick="toggleDarkMode()">☀️</button>
 </header>
 
 <div id="chat-container">
-    <div class="bubble rasim">🤖 <b>ROBOT RASİM:</b> Salam! 🌟 Mən gəldim! Artıq hər addım üçün taymeri dərhal cümlənin altında yaradacam. Həm də dayandırıb sıfırlaya bilərsən! ⏱️🔥</div>
+    <div class="bubble rasim">🤖 <b>ROBOT RASİM:</b> Salam! 🌟 Loqomuz və yeni taymer sistemimiz artıq hazırdır. Hər addım üçün vaxtı dərhal aşağıda görəcəksən! ⏱️🔥</div>
 </div>
 
 <div class="input-area">
-    <input type="text" id="user-input" placeholder="Məs: Kartof qızartması resepti ver... 🍗" onkeypress="if(event.key==='Enter') askRasim()">
+    <input type="text" id="user-input" placeholder="Məs: Plov resepti ver... 🥘" onkeypress="if(event.key==='Enter') askRasim()">
     <button class="btn-send" onclick="askRasim()">Rasimə De 🚀</button>
 </div>
 
 <script>
     const GROQ_API_KEY = "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";
-    let chatHistory = [{ role: "system", content: "Sən Robot Rasimsən. Səmimi Azərbaycan dilində, bol emojilərlə cavab ver. Əvvəlki mesajları mütləq yadda saxla. Resept verəndə vaxtları mütləq 'X dəqiqə' kimi yaz (məs: 5 dəqiqə)." }];
+    // YADDAŞI SAXLIYIRIQ
+    let chatHistory = [{ role: "system", content: "Sən Robot Rasimsən. Səmimi Azərbaycan dilində, emojilərlə cavab ver. Əvvəlki mesajları yadda saxla. Resept verəndə vaxtları mütləq 'X dəqiqə' formatında yaz." }];
     let activeTimers = {};
 
     function controlTimer(id, action) {
@@ -40,20 +40,18 @@
             if (t.interval) return;
             t.interval = setInterval(() => {
                 if (t.seconds > 0) {
-                    t.seconds--;
-                    updateUI(id);
+                    t.seconds--; updateUI(id);
                 } else {
                     clearInterval(t.interval); t.interval = null;
-                    document.getElementById(`time-${id}`).innerText = "BİTDİ! 🥘";
-                    confetti({ particleCount: 100 });
+                    document.getElementById(`time-${id}`).innerText = "HAZIRDIR! 🥘";
+                    confetti({ particleCount: 150, spread: 70 });
                 }
             }, 1000);
         } else if (action === 'pause') {
             clearInterval(t.interval); t.interval = null;
         } else if (action === 'reset') {
             clearInterval(t.interval); t.interval = null;
-            t.seconds = t.total;
-            updateUI(id);
+            t.seconds = t.total; updateUI(id);
         }
     }
 
@@ -76,7 +74,7 @@
         input.value = "";
 
         const loadId = "load-" + Date.now();
-        container.innerHTML += `<div class="bubble rasim" id="${loadId}">🤔 Rasim yazır...</div>`;
+        container.innerHTML += `<div class="bubble rasim" id="${loadId}">🤔 Yazıram...</div>`;
         container.scrollTo(0, container.scrollHeight);
 
         try {
@@ -90,13 +88,13 @@
             chatHistory.push({ role: "assistant", content: raw });
 
             let html = raw.replace(/\n/g, '<br>');
+            // VAXTI TUTMAQ ÜÇÜN REGEX
             const timeRegex = /(\d+)\s*dəqiqə/g;
             let match;
             
-            // Mətndə hər "X dəqiqə" tapıldıqda taymer qurulur
             while ((match = timeRegex.exec(raw)) !== null) {
                 let mins = parseInt(match[1]);
-                let tid = "t" + Math.random().toString(36).substr(2, 9);
+                let tid = "t" + Math.random().toString(36).substr(2, 5);
                 activeTimers[tid] = { seconds: mins * 60, total: mins * 60, interval: null };
 
                 let ui = `
@@ -111,25 +109,10 @@
                 </div>`;
                 html = html.replace(match[0], `<b>${match[0]}</b>${ui}`);
             }
-
             document.getElementById(loadId).innerHTML = `🤖 <b>ROBOT RASİM:</b><br><br>${html}`;
-        } catch (e) { document.getElementById(loadId).innerText = "🚨 Xəta! Yenidən yoxla."; }
+        } catch (e) { document.getElementById(loadId).innerText = "🚨 Limit doldu, bir az gözlə!"; }
         container.scrollTo(0, container.scrollHeight);
     }
-
-    // Fon ikonları
-    (function(){
-        const c = document.getElementById('bg-icons');
-        const icons = ['🍎', '🥦', '🍗', '🥘', '🍅', '🍳'];
-        for (let i = 0; i < 15; i++) {
-            const el = document.createElement('div');
-            el.className = 'floating-icon';
-            el.innerText = icons[Math.floor(Math.random() * icons.length)];
-            el.style.left = Math.random() * 100 + 'vw';
-            el.style.animationDelay = Math.random() * 5 + 's';
-            c.appendChild(el);
-        }
-    })();
 </script>
 </body>
 </html>
