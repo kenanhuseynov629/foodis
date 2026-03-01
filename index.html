@@ -3,111 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Foodis - Robot Rasim ilə Mətbəx Köməkçisi</title>
+    <title>Foodis - Robot Rasim</title>
     <style>
-        /* Əsas Dizayn */
-        :root {
-            --primary: #ff4757;
-            --secondary: #2ed573;
-            --bg: #f1f2f6;
-            --text: #2f3542;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-        }
-
-        header {
-            background: var(--primary);
-            color: white;
-            padding: 15px;
-            text-align: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-
-        /* Çat Sahəsi */
-        #chat-container {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .bubble {
-            max-width: 80%;
-            padding: 12px 18px;
-            border-radius: 20px;
-            font-size: 16px;
-            line-height: 1.5;
-            position: relative;
-            word-wrap: break-word;
-        }
-
-        .rasim {
-            background: white;
-            align-self: flex-start;
-            border-bottom-left-radius: 2px;
-            box-shadow: 2px 2px 5px rgba(0,0,0,0.05);
-        }
-
-        .user {
-            background: var(--secondary);
-            color: white;
-            align-self: flex-end;
-            border-bottom-right-radius: 2px;
-        }
-
-        .label {
-            display: block;
-            font-size: 11px;
-            margin-bottom: 5px;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-
-        /* Giriş Sahəsi */
-        .input-area {
-            background: white;
-            padding: 20px;
-            display: flex;
-            gap: 10px;
-            border-top: 1px solid #ddd;
-        }
-
-        input {
-            flex: 1;
-            padding: 15px;
-            border: 2px solid #eee;
-            border-radius: 30px;
-            outline: none;
-            font-size: 16px;
-        }
-
+        :root { --primary: #ff4757; --secondary: #2ed573; --bg: #f1f2f6; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; display: flex; flex-direction: column; height: 100vh; }
+        header { background: var(--primary); color: white; padding: 15px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        #chat-container { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
+        .bubble { max-width: 85%; padding: 12px 18px; border-radius: 20px; font-size: 16px; line-height: 1.5; box-shadow: 2px 2px 5px rgba(0,0,0,0.05); }
+        .rasim { background: white; align-self: flex-start; border-bottom-left-radius: 2px; border: 1px solid #ddd; }
+        .user { background: var(--secondary); color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
+        .label { display: block; font-size: 11px; margin-bottom: 5px; font-weight: bold; text-transform: uppercase; color: #888; }
+        .user .label { color: #e0e0e0; }
+        .input-area { background: white; padding: 20px; display: flex; gap: 10px; border-top: 1px solid #ddd; }
+        input { flex: 1; padding: 15px; border: 2px solid #eee; border-radius: 30px; outline: none; font-size: 16px; }
         input:focus { border-color: var(--primary); }
-
-        button {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 0 25px;
-            border-radius: 30px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: 0.3s;
-        }
-
-        button:hover { transform: scale(1.05); }
-
-        /* Yükləmə Animasiyası */
-        .typing { font-style: italic; color: #777; }
+        button { background: var(--primary); color: white; border: none; padding: 0 25px; border-radius: 30px; cursor: pointer; font-weight: bold; }
+        .typing { font-style: italic; color: #777; animation: blink 1.5s infinite; }
+        @keyframes blink { 50% { opacity: 0.5; } }
     </style>
 </head>
 <body>
@@ -120,19 +32,19 @@
 <div id="chat-container">
     <div class="bubble rasim">
         <span class="label">🤖 Robot Rasim</span>
-        Salam, canım qardaşım/bacım! Mən Rasim. Yaz görüm soyuducuda nələr var, sənə kral süfrəsi açım!
+        Salam! Mən Rasim. Soyuducuda nə var? De gəlsin, sənə kral bir resept verim!
     </div>
 </div>
 
 <div class="input-area">
-    <input type="text" id="user-input" placeholder="Məs: 2 yumurta, 1 soğan, bir az pendir..." onkeypress="handleKey(event)">
+    <input type="text" id="user-input" placeholder="Məs: yumurta, pomidor, pendir..." onkeypress="if(event.key==='Enter') askRasim()">
     <button onclick="askRasim()">Rasimə De</button>
 </div>
 
 <script type="module">
     import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
 
-    // --- DİQQƏT: API Açarını bura daxil et ---
+    // API açarını bura daxil etdiyindən əmin ol
     const API_KEY = "AIzaSyAdwswjgW9U_irY7NijpTRgG8kxlyVGYlA"; 
     const genAI = new GoogleGenerativeAI(API_KEY);
 
@@ -143,37 +55,36 @@
 
         if (!text) return;
 
-        // İstifadəçinin mesajı
+        // İstifadəçi mesajı
         container.innerHTML += `<div class="bubble user"><span class="label">Sən</span>${text}</div>`;
         input.value = "";
         
-        // "Rasim düşünür" mesajı
+        // Yükləmə mesajı
         const loadingId = "loading-" + Date.now();
-        container.innerHTML += `<div class="bubble rasim typing" id="${loadingId}"><span class="label">🤖 Robot Rasim</span>Rasim düşünür... 🍳</div>`;
+        container.innerHTML += `<div class="bubble rasim typing" id="${loadingId}"><span class="label">🤖 Robot Rasim</span>Rasim qazanları qarışdırır... 🥘</div>`;
         container.scrollTop = container.scrollHeight;
 
         try {
+            // DƏYİŞİKLİK: Model adını ən stabil "gemini-1.5-flash" olaraq təyin etdik
             const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-            const prompt = `Sən Azərbaycanlı aşpaz Robot Rasimsən. Səmimi, zarafatcıl və yardımsevərsən. 
+
+            const prompt = `Sən Foodis saytında Azərbaycanlı aşpaz Robot Rasimsən. 
+            Çox səmimi, xalq dilində danışan, zarafatcıl birisən. 
             İstifadəçi sənə bu ərzaqları verir: ${text}. 
-            Ona ləzzətli bir yemək adı de, qısa reseptini yaz və təxmini neçə kalori olduğunu qeyd et. 
-            Xahiş edirəm cavabı çox uzun etmə, maraqlı və iştahaaçan olsun.`;
+            Ona bir yemək təklif et, resepti qısa yaz və kalorisini de.`;
 
             const result = await model.generateContent(prompt);
             const response = await result.response;
             const rasimText = response.text();
 
-            document.getElementById(loadingId).classList.remove('typing');
-            document.getElementById(loadingId).innerHTML = `<span class="label">🤖 Robot Rasim</span>${rasimText.replace(/\n/g, '<br>')}`;
+            const loadingBubble = document.getElementById(loadingId);
+            loadingBubble.classList.remove('typing');
+            loadingBubble.innerHTML = `<span class="label">🤖 Robot Rasim</span>${rasimText.replace(/\n/g, '<br>')}`;
         } catch (error) {
-            document.getElementById(loadingId).innerText = "Ay daa, nəsə ilişdi! API açarını düz yazdığından əmin ol.";
-            console.error(error);
+            console.error("Xəta baş verdi:", error);
+            document.getElementById(loadingId).innerHTML = `<span class="label">🤖 Robot Rasim</span>Ay daa, başım qarışdı! 🤯 Bir də yaz görüm, nəyin var idi?`;
         }
         container.scrollTop = container.scrollHeight;
-    }
-
-    window.handleKey = function(e) {
-        if (e.key === "Enter") askRasim();
     }
 </script>
 
