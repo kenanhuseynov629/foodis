@@ -6,7 +6,7 @@
     <title>Foodis - Robot Rasim Ultra Pro</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body id="main-body">
+<body>
 
 <div class="bg-icons" id="bg-icons"></div>
 
@@ -18,39 +18,46 @@
             <small>Robot Rasim Ultra Pro</small>
         </div>
     </div>
-    <button class="btn" style="background:var(--text); color:white" onclick="toggleDarkMode()">Gecə/Gündüz</button>
+    <button class="mode-toggle-btn" id="theme-btn" onclick="toggleDarkMode()">☀️</button>
 </header>
 
 <div id="chat-container">
     <div class="bubble rasim">
-        <span style="font-size: 12px; color: var(--primary); font-weight: bold;">🤖 ROBOT RASİM</span><br>
-        Xoş gəldin! Layihəni böyütdük, artıq CSS faylımız da var! 🚀 De görüm, bu gün nə bişiririk?
+        <span style="font-size: 11px; color: var(--primary); font-weight: bold;">🤖 ROBOT RASİM</span><br>
+        Salam! Rasim yenidən xidmətindədir. 🍳 Soyuducuda nə var? Yaz gəlsin!
     </div>
 </div>
 
 <div class="input-area">
-    <input type="text" id="user-input" placeholder="Məs: 2 nəfərik, kartof, yumurta..." onkeypress="if(event.key==='Enter') askRasim()">
-    <button class="btn btn-send" onclick="askRasim()">Rasimə De</button>
+    <input type="text" id="user-input" placeholder="Məs: 3 nəfərik, ət, kartof..." onkeypress="if(event.key==='Enter') askRasim()">
+    <button class="btn-send" onclick="askRasim()">Rasimə De</button>
 </div>
 
 <script>
     const GROQ_API_KEY = "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";
-    const bgIconsContainer = document.getElementById('bg-icons');
-    const icons = ['🍎', '🥦', '🍗', '🍳', '🧂', '🥘', '🔪', '🍅'];
 
+    // Fon İkonları
     function createBgIcons() {
+        const container = document.getElementById('bg-icons');
+        const icons = ['🍎', '🥦', '🍗', '🍳', '🥘', '🍅', '🧅'];
         for (let i = 0; i < 15; i++) {
             const icon = document.createElement('div');
             icon.className = 'floating-icon';
             icon.innerText = icons[Math.floor(Math.random() * icons.length)];
             icon.style.left = Math.random() * 100 + 'vw';
             icon.style.animationDelay = Math.random() * 5 + 's';
-            bgIconsContainer.appendChild(icon);
+            container.appendChild(icon);
         }
     }
     createBgIcons();
 
-    function toggleDarkMode() { document.body.classList.toggle('dark-mode'); }
+    // Gecə/Gündüz Keçidi
+    function toggleDarkMode() {
+        const body = document.body;
+        const btn = document.getElementById('theme-btn');
+        body.classList.toggle('dark-mode');
+        btn.innerText = body.classList.contains('dark-mode') ? '🌙' : '☀️';
+    }
 
     async function askRasim() {
         const input = document.getElementById('user-input');
@@ -64,13 +71,12 @@
         const loadingId = "loading-" + Date.now();
         container.innerHTML += `
             <div class="bubble rasim" id="${loadingId}">
-                <span style="font-size: 12px; color: var(--primary); font-weight: bold;">🤖 ROBOT RASİM</span><br>
-                Rasim resepti analiz edir...
+                <span style="font-size: 11px; color: var(--primary); font-weight: bold;">🤖 ROBOT RASİM</span><br>
+                Rasim düşünür...
                 <div class="voice-wave">
-                    <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
+                    <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
                 </div>
             </div>`;
-        
         container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
 
         try {
@@ -80,7 +86,7 @@
                 body: JSON.stringify({
                     model: "llama-3.3-70b-versatile",
                     messages: [
-                        { role: "system", content: "Sən Foodis aşpazı Rasimsən. Səmimi Azərbaycan dilində danış. Cavabın sonunda 'Çətinlik: X/10' formatında qeyd et." },
+                        { role: "system", content: "Sən Foodis aşpazı Rasimsən. Səmimi Azərbaycan dilində danış. Reseptin sonunda 'Çətinlik: X/10' yaz." },
                         { role: "user", content: text }
                     ]
                 })
@@ -92,13 +98,15 @@
             const diffPercent = diffMatch ? diffMatch[1] * 10 : 50;
 
             document.getElementById(loadingId).innerHTML = `
-                <span style="font-size: 12px; color: var(--primary); font-weight: bold;">🤖 ROBOT RASİM</span><br>
+                <span style="font-size: 11px; color: var(--primary); font-weight: bold;">🤖 ROBOT RASİM</span><br>
                 ${rasimText.replace(/\n/g, '<br>')}
-                <div style="margin-top:15px; font-size:11px;">HAZIRLANMA ÇƏTİNLİYİ:</div>
+                <div style="margin-top:10px; font-size:10px; font-weight:bold;">HAZIRLANMA ÇƏTİNLİYİ:</div>
                 <div class="progress-container"><div class="progress-bar" style="width:${diffPercent}%"></div></div>
-                <a href="https://wa.me/?text=Rasim mənə əla resept verdi!" target="_blank" class="share-btn">WhatsApp-da Paylaş 📱</a>
+                <a href="https://wa.me/?text=Rasim mənə əla bir resept verdi! 🍳" target="_blank" class="share-btn">WhatsApp Paylaş 📱</a>
             `;
-        } catch (e) { document.getElementById(loadingId).innerText = "Xəta baş verdi!"; }
+        } catch (e) { 
+            document.getElementById(loadingId).innerText = "Rasimin beyni qızdı, bir az sonra yoxla!"; 
+        }
         container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
     }
 </script>
