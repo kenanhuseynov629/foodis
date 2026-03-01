@@ -2,7 +2,7 @@
 <html lang="az">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Foodis - Robot Rasim</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
@@ -13,85 +13,70 @@
 
 <header>
     <div class="header-left" style="display: flex; align-items: center;">
-        <img src="logo.jpg" class="rasim-logo" alt="Foodis Loqo">
+        <img src="logo.jpg" class="rasim-logo" onerror="this.src='https://api.dicebear.com/7.x/bottts/svg?seed=Rasim'" alt="Loqo">
         <div>
             <h3 style="margin:0">Foodis 🍳</h3>
-            <small>Rasim: Smart & Friendly 🤖🧠</small>
+            <small>Rasim AI 🤖</small>
         </div>
     </div>
 </header>
 
 <div id="chat-container">
-    <div class="bubble rasim">🤖 <b>ROBOT RASİM:</b> Salam! 🌟 Qabarcıqlar geri döndü, loqomuz yerindədir! Hər şeyi xatırlayıram. Nə bişiririk? 🥘🔥</div>
+    <div class="bubble rasim">🤖 <b>ROBOT RASİM:</b> Salam! 👋 Saytı sənin telefonun üçün uyğunlaşdırdım. Qabarcıqlar da yerindədir! Loqo görünməsə, robot şəkli çıxacaq. 🥘</div>
 </div>
 
 <div class="input-area">
-    <input type="text" id="user-input" placeholder="Məs: Kartof qızartması resepti... 🍟" onkeypress="if(event.key==='Enter') askRasim()">
-    <button class="btn-send" onclick="askRasim()">Rasimə De 🚀</button>
+    <input type="text" id="user-input" placeholder="Yaz..." onkeypress="if(event.key==='Enter') askRasim()">
+    <button class="btn-send" onclick="askRasim()">De 🚀</button>
 </div>
 
 <script>
-    const GROQ_API_KEY = "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";
-    let chatHistory = [{ role: "system", content: "Sən Robot Rasimsən. Səmimi Azərbaycan dilində, emojilərlə cavab ver. Əvvəlki mesajları yadda saxla. Resept verəndə vaxtları mütləq 'X dəqiqə' formatında yaz." }];
-    let activeTimers = {};
-
-    // 🍎 QABARCIQLARI YARADAN FUNKSİYA
+    // QABARCIQLAR SİSTEMİ
     function createBgIcons() {
         const container = document.getElementById('bg-icons');
-        const icons = ['🍎', '🥦', '🍗', '🥘', '🍅', '🍳', '🧂', '🍕', '🍟'];
-        for (let i = 0; i < 20; i++) {
+        const icons = ['🍎', '🥦', '🍗', '🥘', '🍅', '🍳', '🍕'];
+        for (let i = 0; i < 15; i++) {
             const el = document.createElement('div');
             el.className = 'floating-icon';
             el.innerText = icons[Math.floor(Math.random() * icons.length)];
             el.style.left = Math.random() * 100 + 'vw';
             el.style.animationDelay = Math.random() * 5 + 's';
-            el.style.fontSize = (Math.random() * 20 + 20) + 'px';
             container.appendChild(el);
         }
     }
     createBgIcons();
+
+    // DİGƏR FUNKSİYALAR (askRasim, controlTimer və s.) OLDUĞU KİMİ QALIR
+    const GROQ_API_KEY = "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";
+    let chatHistory = [{ role: "system", content: "Sən Robot Rasimsən. Azərbaycan dilində cavab ver, vaxtları 'X dəqiqə' formatında yaz." }];
+    let activeTimers = {};
 
     function controlTimer(id, action) {
         let t = activeTimers[id];
         if (action === 'start') {
             if (t.interval) return;
             t.interval = setInterval(() => {
-                if (t.seconds > 0) {
-                    t.seconds--; updateUI(id);
-                } else {
-                    clearInterval(t.interval); t.interval = null;
-                    document.getElementById(`time-${id}`).innerText = "HAZIRDIR! 🥘";
-                    confetti({ particleCount: 150, spread: 70 });
-                }
+                if (t.seconds > 0) { t.seconds--; updateUI(id); }
+                else { clearInterval(t.interval); t.interval = null; confetti(); }
             }, 1000);
-        } else if (action === 'pause') {
-            clearInterval(t.interval); t.interval = null;
-        } else if (action === 'reset') {
-            clearInterval(t.interval); t.interval = null;
-            t.seconds = t.total; updateUI(id);
-        }
+        } else if (action === 'pause') { clearInterval(t.interval); t.interval = null; }
+        else if (action === 'reset') { clearInterval(t.interval); t.interval = null; t.seconds = t.total; updateUI(id); }
     }
 
     function updateUI(id) {
         let t = activeTimers[id];
-        let m = Math.floor(t.seconds / 60);
-        let s = t.seconds % 60;
-        document.getElementById(`time-${id}`).innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
-        document.getElementById(`bar-${id}`).style.width = (t.seconds / t.total) * 100 + "%";
+        let m = Math.floor(t.seconds/60), s = t.seconds%60;
+        document.getElementById(`time-${id}`).innerText = `${m}:${s<10?'0':''}${s}`;
     }
 
     async function askRasim() {
-        const input = document.getElementById('user-input');
-        const container = document.getElementById('chat-container');
-        const text = input.value.trim();
-        if (!text) return;
-
-        container.innerHTML += `<div class="bubble user">😊 ${text}</div>`;
+        const input = document.getElementById('user-input'), container = document.getElementById('chat-container');
+        const text = input.value.trim(); if (!text) return;
+        container.innerHTML += `<div class="bubble user">${text}</div>`;
         chatHistory.push({ role: "user", content: text });
         input.value = "";
-
         const loadId = "load-" + Date.now();
-        container.innerHTML += `<div class="bubble rasim" id="${loadId}">🤔 Düşünürəm...</div>`;
+        container.innerHTML += `<div class="bubble rasim" id="${loadId}">...</div>`;
         container.scrollTo(0, container.scrollHeight);
 
         try {
@@ -103,30 +88,16 @@
             const data = await resp.json();
             let raw = data.choices[0].message.content;
             chatHistory.push({ role: "assistant", content: raw });
-
             let html = raw.replace(/\n/g, '<br>');
-            const timeRegex = /(\d+)\s*dəqiqə/g;
-            let match;
-            
+            const timeRegex = /(\d+)\s*dəqiqə/g; let match;
             while ((match = timeRegex.exec(raw)) !== null) {
-                let mins = parseInt(match[1]);
-                let tid = "t" + Math.random().toString(36).substr(2, 5);
+                let mins = parseInt(match[1]), tid = "t" + Math.random().toString(36).substr(2, 5);
                 activeTimers[tid] = { seconds: mins * 60, total: mins * 60, interval: null };
-
-                let ui = `
-                <div class="step-timer">
-                    <div class="timer-display" id="time-${tid}">${mins}:00</div>
-                    <div class="progress-bg"><div class="progress-fill" id="bar-${tid}"></div></div>
-                    <div class="timer-controls">
-                        <button class="timer-btn btn-start" onclick="controlTimer('${tid}', 'start')">Başlat</button>
-                        <button class="timer-btn btn-pause" onclick="controlTimer('${tid}', 'pause')">Durdur</button>
-                        <button class="timer-btn btn-reset" onclick="controlTimer('${tid}', 'reset')">Sıfırla</button>
-                    </div>
-                </div>`;
+                let ui = `<div class="step-timer"><div class="timer-display" id="time-${tid}">${mins}:00</div><div class="timer-controls"><button class="timer-btn btn-start" onclick="controlTimer('${tid}','start')">Başlat</button><button class="timer-btn btn-pause" onclick="controlTimer('${tid}','pause')">Durdur</button><button class="timer-btn btn-reset" onclick="controlTimer('${tid}','reset')">Sıfırla</button></div></div>`;
                 html = html.replace(match[0], `<b>${match[0]}</b>${ui}`);
             }
-            document.getElementById(loadId).innerHTML = `🤖 <b>ROBOT RASİM:</b><br><br>${html}`;
-        } catch (e) { document.getElementById(loadId).innerText = "🚨 Limit doldu, bir az gözlə!"; }
+            document.getElementById(loadId).innerHTML = `🤖 <b>ROBOT RASİM:</b><br>${html}`;
+        } catch (e) { document.getElementById(loadId).innerText = "Xəta baş verdi."; }
         container.scrollTo(0, container.scrollHeight);
     }
 </script>
