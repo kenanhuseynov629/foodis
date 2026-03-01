@@ -19,12 +19,8 @@ body {
     background: var(--bg-gradient);
     background-attachment: fixed;
     color: var(--text);
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    overflow: hidden;
-    transition: 0.5s ease;
+    margin: 0; display: flex; flex-direction: column;
+    height: 100vh; overflow: hidden;
 }
 
 .bg-icons {
@@ -32,15 +28,8 @@ body {
     z-index: -1; pointer-events: none; overflow: hidden;
 }
 
-.floating-icon {
-    position: absolute; font-size: 2rem; opacity: 0.15;
-    animation: float 12s infinite linear;
-}
-
-@keyframes float {
-    0% { transform: translateY(110vh) rotate(0deg); }
-    100% { transform: translateY(-10vh) rotate(360deg); }
-}
+.floating-icon { position: absolute; font-size: 2rem; opacity: 0.15; animation: float 12s infinite linear; }
+@keyframes float { 0% { transform: translateY(110vh) rotate(0deg); } 100% { transform: translateY(-10vh) rotate(360deg); } }
 
 header {
     background: var(--glass); backdrop-filter: blur(15px);
@@ -49,13 +38,81 @@ header {
     z-index: 10;
 }
 
-.header-left { display: flex; align-items: center; gap: 12px; }
-.rasim-avatar { width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--primary); background: white; }
+#chat-container {
+    flex: 1; padding: 20px; overflow-y: auto;
+    display: flex; flex-direction: column; gap: 20px; scroll-behavior: smooth;
+}
 
-.mode-toggle-btn {
-    background: var(--glass); border: 1px solid var(--glass-border);
-    font-size: 1.2rem; width: 40px; height: 40px; border-radius: 50%; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
+.bubble {
+    max-width: 85%; padding: 18px 25px; border-radius: 25px;
+    backdrop-filter: blur(10px); background: var(--glass);
+    border: 1px solid var(--glass-border); box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+}
+
+.user { align-self: flex-end; background: var(--secondary); color: white; border-bottom-right-radius: 4px; }
+.rasim { align-self: flex-start; border-bottom-left-radius: 4px; }
+
+/* ADDIM TAYMERİ DİZAYNI */
+.step-timer {
+    background: rgba(255, 71, 87, 0.1);
+    padding: 15px; border-radius: 20px; margin: 15px 0;
+    border: 2px solid var(--primary); text-align: center;
+}
+
+.timer-display { font-size: 2.2rem; font-weight: 800; color: var(--primary); margin-bottom: 5px; font-family: monospace; }
+.progress-bg { width: 100%; background: rgba(0,0,0,0.1); height: 8px; border-radius: 4px; overflow: hidden; }
+.progress-fill { height: 100%; background: var(--primary); width: 100%; transition: 0.3s linear; }
+
+.timer-controls { display: flex; gap: 8px; justify-content: center; margin-top: 12px; }
+.timer-btn { padding: 6px 12px; border-radius: 12px; border: none; cursor: pointer; font-weight: bold; font-size: 0.75rem; }
+.btn-start { background: var(--primary); color: white; }
+.btn-pause { background: #ffa502; color: white; }
+.btn-reset { background: #747d8c; color: white; }
+
+.input-area {
+    background: var(--glass); backdrop-filter: blur(20px);
+    padding: 15px 25px; display: flex; gap: 10px; border-top: 1px solid var(--glass-border);
+}
+
+input { flex: 1; padding: 12px 20px; border-radius: 30px; border: 1px solid var(--glass-border); background: rgba(255, 255, 255, 0.1); color: var(--text); }
+.btn-send { background: var(--primary); color: white; border: none; padding: 10px 25px; border-radius: 30px; cursor: pointer; font-weight: bold; }:root {
+    --primary: #ff4757;
+    --secondary: #2ed573;
+    --glass: rgba(255, 255, 255, 0.2);
+    --glass-border: rgba(255, 255, 255, 0.3);
+    --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    --text: #2f3542;
+}
+
+body.dark-mode {
+    --bg-gradient: linear-gradient(135deg, #2f3542 0%, #1e272e 100%);
+    --glass: rgba(0, 0, 0, 0.4);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --text: #f1f2f6;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background: var(--bg-gradient);
+    background-attachment: fixed;
+    color: var(--text);
+    margin: 0; display: flex; flex-direction: column;
+    height: 100vh; overflow: hidden;
+}
+
+.bg-icons {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    z-index: -1; pointer-events: none; overflow: hidden;
+}
+
+.floating-icon { position: absolute; font-size: 2rem; opacity: 0.15; animation: float 12s infinite linear; }
+@keyframes float { 0% { transform: translateY(110vh) rotate(0deg); } 100% { transform: translateY(-10vh) rotate(360deg); } }
+
+header {
+    background: var(--glass); backdrop-filter: blur(15px);
+    border-bottom: 1px solid var(--glass-border);
+    padding: 10px 25px; display: flex; justify-content: space-between; align-items: center;
+    z-index: 10;
 }
 
 #chat-container {
@@ -64,7 +121,7 @@ header {
 }
 
 .bubble {
-    max-width: 85%; padding: 18px 25px; border-radius: 30px;
+    max-width: 85%; padding: 18px 25px; border-radius: 25px;
     backdrop-filter: blur(10px); background: var(--glass);
     border: 1px solid var(--glass-border); box-shadow: 0 8px 32px rgba(0,0,0,0.08);
 }
@@ -72,40 +129,27 @@ header {
 .user { align-self: flex-end; background: var(--secondary); color: white; border-bottom-right-radius: 4px; }
 .rasim { align-self: flex-start; border-bottom-left-radius: 4px; }
 
-/* RESEPT ADDIMI TAYMERİ */
+/* ADDIM TAYMERİ DİZAYNI */
 .step-timer {
     background: rgba(255, 71, 87, 0.1);
-    padding: 15px; border-radius: 20px; margin: 10px 0;
+    padding: 15px; border-radius: 20px; margin: 15px 0;
     border: 2px solid var(--primary); text-align: center;
 }
 
-.timer-display {
-    font-size: 2.5rem; font-weight: 800; color: var(--primary);
-    margin-bottom: 10px; font-family: monospace;
-}
+.timer-display { font-size: 2.2rem; font-weight: 800; color: var(--primary); margin-bottom: 5px; font-family: monospace; }
+.progress-bg { width: 100%; background: rgba(0,0,0,0.1); height: 8px; border-radius: 4px; overflow: hidden; }
+.progress-fill { height: 100%; background: var(--primary); width: 100%; transition: 0.3s linear; }
 
-.timer-controls { display: flex; gap: 8px; justify-content: center; margin-top: 10px; }
-
-.timer-btn {
-    padding: 8px 15px; border-radius: 15px; border: none;
-    cursor: pointer; font-weight: bold; font-size: 0.8rem; transition: 0.2s;
-}
-
+.timer-controls { display: flex; gap: 8px; justify-content: center; margin-top: 12px; }
+.timer-btn { padding: 6px 12px; border-radius: 12px; border: none; cursor: pointer; font-weight: bold; font-size: 0.75rem; }
 .btn-start { background: var(--primary); color: white; }
 .btn-pause { background: #ffa502; color: white; }
 .btn-reset { background: #747d8c; color: white; }
-
-.progress-bg { width: 100%; background: rgba(0,0,0,0.1); height: 10px; border-radius: 5px; overflow: hidden; }
-.progress-fill { height: 100%; background: var(--primary); width: 100%; transition: 0.2s linear; }
 
 .input-area {
     background: var(--glass); backdrop-filter: blur(20px);
     padding: 15px 25px; display: flex; gap: 10px; border-top: 1px solid var(--glass-border);
 }
 
-input {
-    flex: 1; padding: 12px 20px; border-radius: 30px;
-    border: 1px solid var(--glass-border); background: rgba(255, 255, 255, 0.1); color: var(--text);
-}
-
+input { flex: 1; padding: 12px 20px; border-radius: 30px; border: 1px solid var(--glass-border); background: rgba(255, 255, 255, 0.1); color: var(--text); }
 .btn-send { background: var(--primary); color: white; border: none; padding: 10px 25px; border-radius: 30px; cursor: pointer; font-weight: bold; }
