@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Foodis - Robot Rasim Ultra Pro</title>
+    <title>Foodis - Robot Rasim AI</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
 </head>
 <body>
 
@@ -15,7 +16,7 @@
         <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Rasim&backgroundColor=ff4757" class="rasim-avatar" alt="Rasim">
         <div>
             <h2 style="margin:0">Foodis</h2>
-            <small>Robot Rasim Ultra Pro</small>
+            <small>Rasim: Səsli & Ağıllı Kömekçi</small>
         </div>
     </div>
     <button class="mode-toggle-btn" id="theme-btn" onclick="toggleDarkMode()">☀️</button>
@@ -24,12 +25,12 @@
 <div id="chat-container">
     <div class="bubble rasim">
         <span style="font-size: 11px; color: var(--primary); font-weight: bold;">🤖 ROBOT RASİM</span><br>
-        Salam! Rasim yenidən xidmətindədir. 🍳 Soyuducuda nə var? Yaz gəlsin!
+        Salam! Rasim gəldi. İstəsən resept verim, istəsən Spotify-dan mahnı qoşum, istəsən taymer qurum. Nə edək?
     </div>
 </div>
 
 <div class="input-area">
-    <input type="text" id="user-input" placeholder="Məs: 3 nəfərik, ət, kartof..." onkeypress="if(event.key==='Enter') askRasim()">
+    <input type="text" id="user-input" placeholder="Məs: Kartof qızartması resepti və mahnı qoş..." onkeypress="if(event.key==='Enter') askRasim()">
     <button class="btn-send" onclick="askRasim()">Rasimə De</button>
 </div>
 
@@ -59,6 +60,24 @@
         btn.innerText = body.classList.contains('dark-mode') ? '🌙' : '☀️';
     }
 
+    // Səsli Oxuma Funksiyası
+    function speak(text) {
+        window.speechSynthesis.cancel(); // Əvvəlki səsi dayandır
+        const utterance = new SpeechSynthesisUtterance(text.substring(0, 300)); // Limit 300 char
+        utterance.lang = 'tr-TR'; // Azərbaycan dili üçün ən yaxın səs
+        utterance.rate = 1.0;
+        window.speechSynthesis.speak(utterance);
+    }
+
+    // Taymer Funksiyası
+    function startTimer(minutes) {
+        alert(minutes + " dəqiqəlik taymer başladı!");
+        setTimeout(() => {
+            alert("VAXT BİTDİ! Yeməyə bax!");
+            speak("Vaxt bitdi, yeməyə bax!");
+        }, minutes * 60 * 1000);
+    }
+
     async function askRasim() {
         const input = document.getElementById('user-input');
         const container = document.getElementById('chat-container');
@@ -67,12 +86,23 @@
 
         container.innerHTML += `<div class="bubble user">${text}</div>`;
         input.value = "";
+
+        // Spotify İstəyi Yoxla
+        if (text.toLowerCase().includes("mahnı") || text.toLowerCase().includes("playlist")) {
+            container.innerHTML += `
+                <div class="bubble rasim">
+                    <span style="font-size: 11px; color: var(--primary); font-weight: bold;">🎵 RASİMİN MUSİQİSİ</span><br>
+                    Mətbəxdə kefin olsun! Al sənə özəl pleylist:<br>
+                    <iframe class="spotify-box" src="https://open.spotify.com/embed/playlist/37i9dQZF1DXbS8ycxlZ99M" frameborder="0" allow="encrypted-media"></iframe>
+                </div>`;
+            return;
+        }
         
         const loadingId = "loading-" + Date.now();
         container.innerHTML += `
             <div class="bubble rasim" id="${loadingId}">
                 <span style="font-size: 11px; color: var(--primary); font-weight: bold;">🤖 ROBOT RASİM</span><br>
-                Rasim düşünür...
+                Rasim həm düşünür, həm şəkil çəkir...
                 <div class="voice-wave">
                     <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
                 </div>
@@ -86,7 +116,7 @@
                 body: JSON.stringify({
                     model: "llama-3.3-70b-versatile",
                     messages: [
-                        { role: "system", content: "Sən Foodis aşpazı Rasimsən. Səmimi Azərbaycan dilində danış. Reseptin sonunda 'Çətinlik: X/10' yaz." },
+                        { role: "system", content: "Sən Robot Rasimsən. Resept verəndə mütləq yeməyin adını ilk sətirdə 'Yemək Adı: [Ad]' formatında yaz. Əgər müddət varsa (məs: 5 dəqiqə), onu da qeyd et." },
                         { role: "user", content: text }
                     ]
                 })
@@ -94,18 +124,33 @@
 
             const data = await response.json();
             const rasimText = data.choices[0].message.content;
-            const diffMatch = rasimText.match(/Çətinlik:\s*(\d+)/);
-            const diffPercent = diffMatch ? diffMatch[1] * 10 : 50;
+
+            // Yemək adını şəkil üçün götür
+            const dishMatch = rasimText.match(/Yemək Adı:\s*(.*)/);
+            const dishName = dishMatch ? dishMatch[1] : "delicious food";
+            const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(dishName)}?width=500&height=300&nologo=true`;
+
+            // Taymer müddətini tap (məs: 10 dəqiqə)
+            const timeMatch = rasimText.match(/(\d+)\s*dəqiqə/);
+            const timerHtml = timeMatch ? `
+                <div class="timer-box">
+                    ⏱️ ${timeMatch[1]} dəqiqəlik taymer? 
+                    <button class="timer-btn" onclick="startTimer(${timeMatch[1]})">Başlat</button>
+                </div>` : "";
 
             document.getElementById(loadingId).innerHTML = `
                 <span style="font-size: 11px; color: var(--primary); font-weight: bold;">🤖 ROBOT RASİM</span><br>
+                <img src="${imageUrl}" class="recipe-img" alt="Yemək şəkli">
+                <button onclick="speak(\`${rasimText.replace(/`/g, '')}\`)" style="background:none; border:1px solid var(--primary); border-radius:10px; cursor:pointer; font-size:10px; padding:2px 5px;">🔊 Səsli Oxu</button><br><br>
                 ${rasimText.replace(/\n/g, '<br>')}
-                <div style="margin-top:10px; font-size:10px; font-weight:bold;">HAZIRLANMA ÇƏTİNLİYİ:</div>
-                <div class="progress-container"><div class="progress-bar" style="width:${diffPercent}%"></div></div>
-                <a href="https://wa.me/?text=Rasim mənə əla bir resept verdi! 🍳" target="_blank" class="share-btn">WhatsApp Paylaş 📱</a>
+                ${timerHtml}
             `;
+
+            confetti({ particleCount: 100, spread: 70, origin: { y: 0.7 } });
+            speak("Reseptiniz hazırdır! Nuş olsun.");
+
         } catch (e) { 
-            document.getElementById(loadingId).innerText = "Rasimin beyni qızdı, bir az sonra yoxla!"; 
+            document.getElementById(loadingId).innerText = "Xəta oldu!"; 
         }
         container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
     }
