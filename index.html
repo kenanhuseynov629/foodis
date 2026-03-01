@@ -3,19 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Foodis - Robot Rasim (Groq Powered)</title>
+    <title>Foodis - Robot Rasim (Mükəmməl Azərbaycan dili)</title>
     <style>
         :root { --primary: #ff4757; --secondary: #2ed573; --bg: #f1f2f6; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; display: flex; flex-direction: column; height: 100vh; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); margin: 0; display: flex; flex-direction: column; height: 100vh; }
         header { background: var(--primary); color: white; padding: 15px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         #chat-container { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
-        .bubble { max-width: 85%; padding: 12px 18px; border-radius: 20px; font-size: 16px; line-height: 1.5; box-shadow: 2px 2px 5px rgba(0,0,0,0.05); }
-        .rasim { background: white; align-self: flex-start; border-bottom-left-radius: 2px; border: 1px solid #ddd; }
+        .bubble { max-width: 85%; padding: 12px 18px; border-radius: 20px; font-size: 16px; line-height: 1.6; box-shadow: 2px 2px 5px rgba(0,0,0,0.05); }
+        .rasim { background: white; align-self: flex-start; border-bottom-left-radius: 2px; border: 1px solid #ddd; color: #2d3436; }
         .user { background: var(--secondary); color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
         .label { display: block; font-size: 11px; margin-bottom: 5px; font-weight: bold; text-transform: uppercase; color: #888; }
+        .user .label { color: #e0e0e0; }
         .input-area { background: white; padding: 20px; display: flex; gap: 10px; border-top: 1px solid #ddd; }
         input { flex: 1; padding: 15px; border: 2px solid #eee; border-radius: 30px; outline: none; font-size: 16px; }
-        button { background: var(--primary); color: white; border: none; padding: 0 25px; border-radius: 30px; cursor: pointer; font-weight: bold; }
+        button { background: var(--primary); color: white; border: none; padding: 0 25px; border-radius: 30px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        button:hover { transform: scale(1.05); background: #ff6b81; }
         .typing { font-style: italic; color: #777; }
     </style>
 </head>
@@ -23,23 +25,23 @@
 
 <header>
     <h1>Foodis 🍳</h1>
-    <p>Robot Rasim: "Mətbəxin ağası gəldi!" (Groq Edition)</p>
+    <p>Robot Rasim: "Mətbəxin ağası gəldi!"</p>
 </header>
 
 <div id="chat-container">
     <div class="bubble rasim">
         <span class="label">🤖 Robot Rasim</span>
-        Salam! Kalbasa, yumurta, pendir... Nəyin var, hamısını de, sənə şah bir resept tapım!
+        Salam! Mən Robot Rasim. Soyuducuda qalan ərzaqları yaz bura, sənə barmaqlarını yedirəcək bir şey tapım! 🥘
     </div>
 </div>
 
 <div class="input-area">
-    <input type="text" id="user-input" placeholder="Ərzaqları yaz..." onkeypress="if(event.key==='Enter') askRasim()">
+    <input type="text" id="user-input" placeholder="Məs: yumurta, pomidor, saçaq pendir..." onkeypress="if(event.key==='Enter') askRasim()">
     <button onclick="askRasim()">Rasimə De</button>
 </div>
 
 <script>
-    // Groq API Açarını bura daxil et
+    // Bura öz Groq API açarını yapışdır
     const GROQ_API_KEY = "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";
 
     async function askRasim() {
@@ -49,11 +51,13 @@
 
         if (!text) return;
 
+        // İstifadəçi mesajı
         container.innerHTML += `<div class="bubble user"><span class="label">Sən</span>${text}</div>`;
         input.value = "";
         
+        // Yükləmə mesajı
         const loadingId = "loading-" + Date.now();
-        container.innerHTML += `<div class="bubble rasim typing" id="${loadingId}"><span class="label">🤖 Robot Rasim</span>Rasim düşünür... 🚀</div>`;
+        container.innerHTML += `<div class="bubble rasim typing" id="${loadingId}"><span class="label">🤖 Robot Rasim</span>Rasim qazanları yoxlayır... 🚀</div>`;
         container.scrollTop = container.scrollHeight;
 
         try {
@@ -68,24 +72,35 @@
                     messages: [
                         {
                             role: "system",
-                            content: "Sən Foodis saytında Robot Rasimsən. Azərbaycan dilində, çox səmimi, zarafatcıl və xalq dilində danışırsan. İstifadəçinin verdiyi ərzaqlara uyğun ləzzətli resept, hazırlanma qaydası və kalori miqdarını yaz."
+                            content: `Sən Foodis saytında peşəkar Azərbaycanlı aşpaz Robot Rasimsən. 
+                            QAYDALARIN:
+                            1. MÜTLƏQ təmiz və səlis Azərbaycan dilində danış. 
+                            2. Türk dilindən sözlər qarıştırma (məsələn: 'yapmaq' yox 'etmək', 'nə yapıyorsun' yox 'nə edirsən').
+                            3. Səmimi, zarafatcıl və mehriban ol. 'Nu ş qardaşım/bacım' kimi ifadələr işlət.
+                            4. Resepti bu ardıcıllıqla ver: 
+                               - 🍴 Yeməyin adı 
+                               - 🛒 Lazım olanlar 
+                               - 👨‍🍳 Hazırlanma qaydası (addım-addım)
+                               - 🔥 Təxmini kalori dəyəri.`
                         },
                         {
                             role: "user",
-                            content: text
+                            content: `Mənim bu ərzaqlarım var: ${text}. Mənə nə bişirməyi məsləhət görürsən?`
                         }
-                    ]
+                    ],
+                    temperature: 0.7 // Daha yaradıcı və təbii cavablar üçün
                 })
             });
 
             const data = await response.json();
             const rasimText = data.choices[0].message.content;
 
-            document.getElementById(loadingId).classList.remove('typing');
-            document.getElementById(loadingId).innerHTML = `<span class="label">🤖 Robot Rasim</span>${rasimText.replace(/\n/g, '<br>')}`;
+            const loadingBubble = document.getElementById(loadingId);
+            loadingBubble.classList.remove('typing');
+            loadingBubble.innerHTML = `<span class="label">🤖 Robot Rasim</span>${rasimText.replace(/\n/g, '<br>')}`;
         } catch (error) {
             console.error(error);
-            document.getElementById(loadingId).innerHTML = `<span class="label">🤖 Robot Rasim</span>Ay daa, internetimdə nəsə problem var, ya da API açarı səhvdir!`;
+            document.getElementById(loadingId).innerHTML = `<span class="label">🤖 Robot Rasim</span>Ay daa, başım qarışdı! Deyəsən internetdə nəsə ilişib. Bir də yoxla görək!`;
         }
         container.scrollTop = container.scrollHeight;
     }
